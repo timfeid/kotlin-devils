@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NJD</string>
+    <string name="api_url">https://statsapi.web.nhl.com/api/v1/</string>
+    <string name="api_team_id">1</string>
+    <string name="api_season">20192020</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="top_scorers">Top Scorers</string>
+</resources>
