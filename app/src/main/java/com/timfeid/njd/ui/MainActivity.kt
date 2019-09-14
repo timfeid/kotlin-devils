@@ -37,13 +37,11 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
         pagerAdapter = GamePagerAdapter(supportFragmentManager)
         view_pager.adapter = pagerAdapter
 
-        // Configure action bar
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.title = getString(R.string.app_name)
 
 
-        // Initialize the action bar drawer toggle instance
         val drawerToggle:ActionBarDrawerToggle = object : ActionBarDrawerToggle(
             this,
             drawer_layout,
@@ -51,15 +49,7 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
             R.string.drawer_open,
             R.string.drawer_close
         ){
-            override fun onDrawerClosed(view:View){
-                super.onDrawerClosed(view)
-                //toast("Drawer closed")
-            }
 
-            override fun onDrawerOpened(drawerView: View){
-                super.onDrawerOpened(drawerView)
-                //toast("Drawer opened")
-            }
         }
 
 
@@ -72,9 +62,9 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
         // Set navigation view navigation item selected listener
         hamburger_menu.setNavigationItemSelectedListener{
             when (it.itemId){
-                R.id.nav_schedule -> toast("Cut clicked")
-                R.id.nav_player_stats -> toast("Copy clicked")
-                R.id.nav_media -> toast("Paste clicked")
+                R.id.nav_schedule -> toast("Schedule clicked")
+                R.id.nav_player_stats -> toast("Player stats clicked")
+                R.id.nav_media -> toast("Media clicked")
 
             }
             // Close the drawer

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NJD</string>
+    <string name="app_name">New Jersey Devils</string>
     <string name="api_url">https://statsapi.web.nhl.com/api/v1/</string>
     <string name="api_team_id">1</string>
     <string name="api_season">20192020</string>
