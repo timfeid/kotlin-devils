@@ -70,7 +70,7 @@ class GameFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(game: Game) =
+        fun newInstance(game: Game? = null) =
             GameFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_GAME, game as Serializable)
