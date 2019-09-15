@@ -32,7 +32,6 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         get() = R.layout.game_upcoming
 
     var team = "home"
-    var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 
     override fun initView() {
         team = if (game.teams.home.team.id.toString() == BuildConfig.API_TEAM_ID) { "home" } else { "away" }
@@ -43,19 +42,6 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         val broadcastInfo = rootView.findViewById<TextView>(R.id.broadcastInfo)
         broadcastInfo.setText(getBroadcastInfo() + getRadioBroadcastInfo())
         populateTopScorers()
-        populateDateAndTime()
-    }
-
-    private fun populateDateAndTime() {
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-        val gameDate: TextView = rootView.findViewById(R.id.game_date)
-        val gameTime: TextView = rootView.findViewById(R.id.game_time)
-
-        var date = dateFormat.parse(game.gameDate)
-
-        gameTime.setText(SimpleDateFormat("h:mm a", Locale.US).format(date))
-        gameDate.setText(SimpleDateFormat("MMM d", Locale.US).format(date))
     }
 
 
@@ -91,9 +77,16 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 )
             )
 
-            var roster = if (team == "home") { game.teams.home.team.roster } else { game.teams.away.team.roster }
 
-            for (i in 0..2) {
+            var roster = if (team == "home") {
+                game.teams.home.team.roster!!.roster
+            } else {
+                game.teams.away.team.roster!!.roster
+            }
+
+            roster = roster.sortedWith(compareByDescending(nullsFirst<Int>()) { it.findCurrentStats().points })
+
+            for (i in 0..5) {
                 val layout = layoutInflater.inflate(
                     R.layout.top_scorer_box,
                     topScorersLayout,
@@ -105,10 +98,14 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 val goals = layout.findViewById<TextView>(R.id.top_scorer_goals)
                 val assists = layout.findViewById<TextView>(R.id.top_scorer_assists)
                 val info = layout.findViewById<TextView>(R.id.top_scorer_info)
+                val player = roster.get(i)
 
-                scorer.setText(roster?.roster?.get(i)?.person?.fullName)
+                scorer.setText(player.person.shortName())
+                goals.setText("${player.findCurrentStats().goals.toString()}G")
+                assists.setText("${player.findCurrentStats().assists.toString()}A")
+                info.setText("#${player.jerseyNumber}, ${player.position.abbreviation}")
 
-                roster?.roster?.get(i)?.person?.id?.let { getImageFor(it) }?.let {
+                getImageFor(player.person.id).let {
                     imageCircleUrl(photo,
                         it
                     )

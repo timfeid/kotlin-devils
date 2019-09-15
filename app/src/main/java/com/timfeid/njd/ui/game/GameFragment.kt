@@ -19,6 +19,7 @@ private const val ARG_GAME = "game"
 class GameFragment : Fragment() {
     protected var game: Game? = null
     private var listener: OnFragmentInteractionListener? = null
+    val GAME_STATUS_FINAL = "7"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,14 @@ class GameFragment : Fragment() {
     ): View? {
         var rootView = inflater.inflate(R.layout.fragment_game, container, false)
 
-        var layout = game?.let { UpcomingGameLayout(it, rootView, activity as Activity) }
+        var layout = game?.let {
+            if (game!!.status.statusCode == GAME_STATUS_FINAL) {
+                PreviousGameLayout(it, rootView, activity as Activity)
+            } else {
+                UpcomingGameLayout(it, rootView, activity as Activity)
+            }
+        }
+
         layout?.build()
 
         return rootView

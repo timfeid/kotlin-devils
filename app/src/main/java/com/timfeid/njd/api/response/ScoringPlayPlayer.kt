@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 
 @Serializable
-data class Stat(
-    val type: Type,
-    val splits: List<Split>? = null
+data class ScoringPlayPlayer(
+    val player: Person,
+    val playerType: String,
+    val seasonTotal: Int? = null
 )

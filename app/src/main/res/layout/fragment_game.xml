@@ -6,12 +6,4 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.game.GameFragment">
 
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:tint="#85000000"
-        app:srcCompat="@mipmap/bg" />
-
 </FrameLayout>

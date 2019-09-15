@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 
 @Serializable
-data class Stat(
-    val type: Type,
-    val splits: List<Split>? = null
+data class ThirdStar(
+    val fullName: String,
+    val id: Int,
+    val link: String
 )

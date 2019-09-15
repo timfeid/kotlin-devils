@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EpgItem(
-    var guid: String,
+    var guid: String? = null,
     var mediaState: String,
     var mediaPlaybackId: String,
-    var mediaFeedType: String,
-    var callLetters: String,
-    var eventId: String,
-    var language: String,
-    var freeGame: Boolean,
-    var feedName: String,
-    var gamePlus: Boolean
+    var mediaFeedType: String? = null,
+    var callLetters: String? = null,
+    var eventId: String? = null,
+    var language: String? = null,
+    var freeGame: Boolean = false,
+    var feedName: String? = null,
+    var gamePlus: Boolean = false
 )

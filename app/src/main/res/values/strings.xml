@@ -14,4 +14,16 @@
     <string name="player_stats">Player Stats</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">closed</string>
+    <string name="period_1_name">1st</string>
+    <string name="period_2_name">2nd</string>
+    <string name="period_3_name">3rd</string>
+    <string name="period_4_name">ot</string>
+    <string name="period_so_name">so</string>
+    <string name="final_score_name">Total</string>
+    <string name="dash">-</string>
+    <string name="score_summary_header">Score Summary</string>
+    <string name="three_stars_header">3 Stars</string>
+    <string name="boxscore_header">Boxscore</string>
+    <string name="linescore_header">Linescore</string>
+    <string name="players_on_ice_header">Players on Ice</string>
 </resources>

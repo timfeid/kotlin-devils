@@ -1,33 +1,39 @@
 package com.timfeid.njd.api.response
 
 
+import com.timfeid.njd.BuildConfig
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Optional
 
 @Serializable
 data class Person(
-    val active: Boolean,
-    val alternateCaptain: Boolean,
-    val birthCity: String,
-    val birthCountry: String,
-    val birthDate: String,
-    val captain: Boolean,
-    val currentAge: Int,
-    val currentTeam: CurrentTeam,
-    val firstName: String,
+    val active: Boolean? = null,
+    val alternateCaptain: Boolean = false,
+    val birthCity: String? = null,
+    val birthCountry: String? = null,
+    val birthDate: String? = null,
+    val captain: Boolean = false,
+    val currentAge: Int? = null,
+    val currentTeam: CurrentTeam? = null,
+    val firstName: String? = null,
     val fullName: String,
     val primaryNumber: String? = null,
-    val height: String,
+    val height: String? = null,
     val id: Int,
-    val lastName: String,
+    val lastName: String? = null,
     val shootsCatches: String? = null,
     val link: String,
     val nationality: String? = null,
-    val otherNames: OtherNames,
-    val primaryPosition: PrimaryPosition,
-    val rookie: Boolean,
-    val rosterStatus: String,
-    val stats: List<Stat>,
-    val weight: Int
-)
+    val otherNames: OtherNames? = null,
+    val primaryPosition: PrimaryPosition? = null,
+    val rookie: Boolean? = null,
+    val rosterStatus: String? = null,
+    val stats: List<Stat>? = null,
+    val weight: Int? = null
+) {
+    fun shortName (): String {
+        val firstInitial = fullName.substring(0, 1)
+
+        return "$firstInitial. $lastName"
+    }
+}

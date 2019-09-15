@@ -13,13 +13,15 @@ import com.squareup.picasso.Picasso
 import com.timfeid.njd.api.response.Game
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.widget.ScrollView
 import androidx.core.view.accessibility.AccessibilityEventCompat.getRecord
 import com.timfeid.njd.R
 import com.timfeid.njd.api.response.LeagueRecord
 import java.lang.StringBuilder
 import org.json.JSONObject
-
-
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 internal abstract class GameLayout(
@@ -40,12 +42,13 @@ internal abstract class GameLayout(
     val EVENT_PERIOD_READY = "PERIOD_READY"
     val GAME_TYPE_PLAYOFF = "P"
 
-    protected var layout: ConstraintLayout? = null
+    protected var layout: ScrollView? = null
 
     private var awayTeamCity: TextView? = null
     private var awayTeamRecord: TextView? = null
     private var homeTeamCity: TextView? = null
     private var homeTeamRecord: TextView? = null
+    var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
     var activity: Activity
         protected set
 
@@ -67,6 +70,7 @@ internal abstract class GameLayout(
             add()
             initMainView()
             initView()
+            populateDateAndTime()
             populateAwayTeam()
             populateHomeTeam()
             fill()
@@ -77,9 +81,23 @@ internal abstract class GameLayout(
     }
 
     private fun add() {
-        layout = layoutInflater.inflate(this.layoutId, null) as ConstraintLayout
+        layout = layoutInflater.inflate(this.layoutId, null) as ScrollView
         val vg = rootView as ViewGroup
         vg.addView(layout)
+    }
+
+
+
+    private fun populateDateAndTime() {
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val gameDate: TextView = rootView.findViewById(R.id.game_date)
+        val gameTime: TextView = rootView.findViewById(R.id.game_time)
+
+        var date = dateFormat.parse(game.gameDate)
+
+        gameTime.setText(SimpleDateFormat("h:mm a", Locale.US).format(date))
+        gameDate.setText(SimpleDateFormat("MMM d", Locale.US).format(date))
     }
 
     fun getWinsLossesOts (record: LeagueRecord): String {

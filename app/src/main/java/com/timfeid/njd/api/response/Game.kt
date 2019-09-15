@@ -26,5 +26,53 @@ data class Game(
     val teams: ScheduleTeams,
     val venue: Venue,
     val radioBroadcasts: List<RadioBroadcast> = ArrayList(),
-    val broadcasts: List<Broadcast> = ArrayList()
-) : java.io.Serializable
+    val broadcasts: List<Broadcast> = ArrayList(),
+    val decisions: Decisions? = null,
+    val scoringPlays: List<ScoringPlay>
+) : java.io.Serializable {
+
+    val PLAYER_TYPE_SCORER = "Scorer"
+    val PLAYER_TYPE_ASSIST = "Assist"
+
+    fun findPlayerById(id: Int): Player? {
+        for (player in teams.home.team.roster!!.roster) {
+            if (player.person.id == id) {
+                return player
+            }
+        }
+
+        for (player in teams.away.team.roster!!.roster) {
+            if (player.person.id == id) {
+                return player
+            }
+        }
+
+        return null
+    }
+
+    fun getPlayerGoals (id: Int): Int {
+        var total = 0
+        for (play in scoringPlays) {
+            for (player in play.players) {
+                if (player.player.id == id && player.playerType == PLAYER_TYPE_SCORER) {
+                    total ++
+                }
+            }
+        }
+
+        return total
+    }
+
+    fun getPlayerAssists (id: Int): Int {
+        var total = 0
+        for (play in scoringPlays) {
+            for (player in play.players) {
+                if (player.player.id == id && player.playerType == PLAYER_TYPE_ASSIST) {
+                    total ++
+                }
+            }
+        }
+
+        return total
+    }
+}

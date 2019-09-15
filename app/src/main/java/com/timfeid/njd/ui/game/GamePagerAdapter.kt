@@ -43,6 +43,9 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         endDate.add(Calendar.DATE, DAYS_FROM_TODAY)
         startDate.add(Calendar.DATE, DAYS_FROM_TODAY * -1)
 
+        // endDate.add(Calendar.MONTH, -10)
+        // startDate.add(Calendar.MONTH, -10)
+
         url.addParam("startDate", format.format(startDate.getTime()))
         url.addParam("endDate", format.format(endDate.getTime()))
         url.addParam("hydrate", String.format("team(leaders,roster(season=%s,person(name,stats(splits=[statsSingleSeason,statsSingleSeasonPlayoffs])))),linescore,broadcasts(all),tickets,game(content(media(epg),highlights(scoreboard)),seriesSummary),radioBroadcasts,metadata,decisions,scoringplays,seriesSummary(series)",
@@ -52,20 +55,15 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
         val json = Json(JsonConfiguration(strictMode = false))
 
-        try {
 
-            val unparsed = URL(url.get()).readText()
+        val unparsed = URL(url.get()).readText()
 
+        Log.d("raw", url.get())
 
-            schedule = json.parse(Schedule.serializer(), unparsed)
-            Log.d("raw", url.get())
+        schedule = json.parse(Schedule.serializer(), unparsed)
 
-            return schedule
-        } catch (e: Exception) {
-            Log.d("ERROR", e.toString())
-        }
+        return schedule
 
-        return null
     }
 
 
