@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:paddingTop="160dp">
         <com.timfeid.njd.ui.FontTextView
-            android:id="@+id/gameDate"
+            android:id="@+id/game_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
@@ -30,7 +30,8 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:id="@+id/game_time"/>
 
         <View
             android:background="@color/transparentMax"

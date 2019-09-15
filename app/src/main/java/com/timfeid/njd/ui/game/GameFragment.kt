@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.text.Layout
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +31,6 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         var rootView = inflater.inflate(R.layout.fragment_game, container, false)
 
         var layout = game?.let { UpcomingGameLayout(it, rootView, activity as Activity) }
@@ -41,13 +39,8 @@ class GameFragment : Fragment() {
         return rootView
     }
 
-    fun populate (rootView: View) {
-        var textView = rootView.findViewById<TextView>(R.id.homeTeam)
-        textView.setText(game?.teams?.home?.team?.name)
-    }
-
     fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        listener?.gameFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
@@ -65,7 +58,7 @@ class GameFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+        fun gameFragmentInteraction(uri: Uri)
     }
 
     companion object {

@@ -3,6 +3,15 @@ package com.timfeid.njd.api.response
 
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
+import java.util.Date
+
+import kotlinx.serialization.*
+import kotlinx.serialization.internal.StringDescriptor
+import kotlinx.serialization.json.Json
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.TimeZone
 
 @Serializable
 data class Game(

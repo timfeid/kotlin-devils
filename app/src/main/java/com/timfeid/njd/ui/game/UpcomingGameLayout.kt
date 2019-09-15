@@ -16,7 +16,12 @@ import com.timfeid.njd.R
 import com.timfeid.njd.api.response.Broadcast
 import com.timfeid.njd.api.response.RadioBroadcast
 import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.Arrays.asList
+
+
 
 
 internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity) :
@@ -27,6 +32,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         get() = R.layout.game_upcoming
 
     var team = "home"
+    var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
 
     override fun initView() {
         team = if (game.teams.home.team.id.toString() == BuildConfig.API_TEAM_ID) { "home" } else { "away" }
@@ -37,6 +43,19 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         val broadcastInfo = rootView.findViewById<TextView>(R.id.broadcastInfo)
         broadcastInfo.setText(getBroadcastInfo() + getRadioBroadcastInfo())
         populateTopScorers()
+        populateDateAndTime()
+    }
+
+    private fun populateDateAndTime() {
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val gameDate: TextView = rootView.findViewById(R.id.game_date)
+        val gameTime: TextView = rootView.findViewById(R.id.game_time)
+
+        var date = dateFormat.parse(game.gameDate)
+
+        gameTime.setText(SimpleDateFormat("h:mm a", Locale.US).format(date))
+        gameDate.setText(SimpleDateFormat("MMM d", Locale.US).format(date))
     }
 
 
