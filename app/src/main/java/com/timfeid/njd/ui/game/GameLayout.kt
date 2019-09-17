@@ -8,17 +8,20 @@ import org.json.JSONException
 import android.content.res.Resources
 import android.view.View
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.squareup.picasso.Picasso
-import com.timfeid.njd.api.response.Game
+import com.timfeid.njd.api.schedule.Game
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.widget.ScrollView
-import androidx.core.view.accessibility.AccessibilityEventCompat.getRecord
 import com.timfeid.njd.R
-import com.timfeid.njd.api.response.LeagueRecord
+import com.timfeid.njd.UrlMaker
+import com.timfeid.njd.api.live.Live
+import com.timfeid.njd.api.schedule.LeagueRecord
+import com.timfeid.njd.api.schedule.Schedule
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import java.lang.StringBuilder
-import org.json.JSONObject
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -87,8 +90,7 @@ internal abstract class GameLayout(
     }
 
 
-
-    private fun populateDateAndTime() {
+    protected open fun populateDateAndTime() {
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
         val gameDate: TextView = rootView.findViewById(R.id.game_date)
@@ -140,6 +142,9 @@ internal abstract class GameLayout(
     private fun getTeamPoints(record: LeagueRecord): Int {
         return record.wins * 2 + record.ot
     }
+
+    fun getIdByName(id: String, defType: String = "id") =
+        resources.getIdentifier(id, defType, activity.packageName)
 
     private fun populateAwayTeam() {
         game.teams.away.team.teamName?.let { setTextViewTextByTag("AWAY_TEAM_NAME", it) }

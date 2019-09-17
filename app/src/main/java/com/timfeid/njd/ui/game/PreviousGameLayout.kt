@@ -1,17 +1,16 @@
 package com.timfeid.njd.ui.game
 
-import com.timfeid.njd.api.response.Game
+import com.timfeid.njd.api.schedule.Game
 import android.widget.TextView
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.timfeid.njd.R
-import com.timfeid.njd.api.response.Player
+import com.timfeid.njd.api.schedule.Player
 
 
-internal class PreviousGameLayout(game: Game, rootView: View, activity: Activity) :
+internal open class PreviousGameLayout(game: Game, rootView: View, activity: Activity) :
     GameLayout(game, rootView, activity) {
     override fun fill() {
         populateThreeStars()
@@ -35,9 +34,9 @@ internal class PreviousGameLayout(game: Game, rootView: View, activity: Activity
     }
 
     fun populateStar(ordinalPosition: String, star: Player?) {
-        val image: ImageView = rootView.findViewById(resources.getIdentifier("${ordinalPosition}_star_image", "id", activity.packageName))
-        val name: TextView = rootView.findViewById(resources.getIdentifier("${ordinalPosition}_star_name", "id", activity.packageName))
-        val stats: TextView = rootView.findViewById(resources.getIdentifier("${ordinalPosition}_star_stats", "id", activity.packageName))
+        val image: ImageView = rootView.findViewById(getIdByName("${ordinalPosition}_star_image"))
+        val name: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_name"))
+        val stats: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_stats"))
         val goals = game.getPlayerGoals(star!!.person.id)
         val assists = game.getPlayerAssists(star!!.person.id)
 

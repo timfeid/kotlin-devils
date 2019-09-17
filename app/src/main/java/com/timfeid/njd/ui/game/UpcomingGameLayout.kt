@@ -1,27 +1,14 @@
 package com.timfeid.njd.ui.game
 
-import android.content.Intent
-import com.timfeid.njd.api.response.Game
-import android.widget.ImageButton
+import com.timfeid.njd.api.schedule.Game
 import android.widget.TextView
 import android.widget.LinearLayout
-import org.json.JSONException
-import java.lang.reflect.Modifier.isFinal
 import android.app.Activity
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.R
-import com.timfeid.njd.api.response.Broadcast
-import com.timfeid.njd.api.response.RadioBroadcast
-import org.w3c.dom.Text
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.Arrays.asList
-
-
 
 
 internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity) :

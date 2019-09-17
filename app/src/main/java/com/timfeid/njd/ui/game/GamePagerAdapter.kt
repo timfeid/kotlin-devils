@@ -6,14 +6,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.response.Schedule
-import com.timfeid.njd.ui.game.GameFragment
+import com.timfeid.njd.api.schedule.Schedule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import java.lang.Exception
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
