@@ -7,4 +7,8 @@ import kotlinx.serialization.Serializable
 data class Strength(
     val code: String,
     val name: String
-)
+) {
+    companion object {
+        val CODE_EVEN = "EVEN"
+    }
+}

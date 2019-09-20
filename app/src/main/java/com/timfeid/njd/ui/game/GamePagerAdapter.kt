@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.UrlMaker
+import com.timfeid.njd.api.schedule.Game
 import com.timfeid.njd.api.schedule.Schedule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,14 +19,12 @@ import java.util.*
 
 class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
     var schedule: Schedule? = null
+    var games = mutableListOf<Game>()
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-
             fetchSchedule()
             CoroutineScope(Dispatchers.Main).launch {
-
-                Log.d("after", "url?")
                 notifyDataSetChanged()
             }
         }
@@ -60,6 +59,14 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
         schedule = json.parse(Schedule.serializer(), unparsed)
 
+        if (schedule != null) {
+            for (date in schedule!!.dates) {
+                for (game in date.games) {
+                    games.add(game)
+                }
+            }
+        }
+
         return schedule
 
     }
@@ -70,15 +77,11 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
             return GameFragment.newInstance()
         }
 
-        return GameFragment.newInstance(schedule!!.dates[position].games[0])
+        return GameFragment.newInstance(games[position])
     }
 
     override fun getCount(): Int {
-        if (schedule == null) {
-            return 0
-        }
-
-        return schedule!!.dates.size
+        return games.count()
     }
 
 }

@@ -1,6 +1,7 @@
 package com.timfeid.njd.api.schedule
 
 
+import com.timfeid.njd.api.common.Play
 import kotlinx.serialization.Serializable
 
 import java.util.*
@@ -20,11 +21,15 @@ data class Game(
     val radioBroadcasts: List<RadioBroadcast> = ArrayList(),
     val broadcasts: List<Broadcast> = ArrayList(),
     val decisions: Decisions? = null,
-    val scoringPlays: List<ScoringPlay>
+    val scoringPlays: List<Play>
 ) : java.io.Serializable {
 
-    val PLAYER_TYPE_SCORER = "Scorer"
-    val PLAYER_TYPE_ASSIST = "Assist"
+    companion object {
+
+        val PLAYER_TYPE_SCORER = "Scorer"
+        val PLAYER_TYPE_ASSIST = "Assist"
+    }
+
 
     fun findPlayerById(id: Int): Player? {
         for (player in teams.home.team.roster!!.roster) {
@@ -45,7 +50,7 @@ data class Game(
     fun getPlayerGoals (id: Int): Int {
         var total = 0
         for (play in scoringPlays) {
-            for (player in play.players) {
+            for (player in play.players!!) {
                 if (player.player.id == id && player.playerType == PLAYER_TYPE_SCORER) {
                     total ++
                 }
@@ -58,7 +63,7 @@ data class Game(
     fun getPlayerAssists (id: Int): Int {
         var total = 0
         for (play in scoringPlays) {
-            for (player in play.players) {
+            for (player in play.players!!) {
                 if (player.player.id == id && player.playerType == PLAYER_TYPE_ASSIST) {
                     total ++
                 }

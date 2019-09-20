@@ -32,6 +32,8 @@ data class Person(
     fun shortName (): String {
         val firstInitial = fullName.substring(0, 1)
 
+        val lastName = this.lastName ?: fullName.substring(fullName.indexOf(' ')+1)
+
         return "$firstInitial. $lastName"
     }
 }

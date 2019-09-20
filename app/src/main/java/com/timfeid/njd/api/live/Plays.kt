@@ -1,16 +1,24 @@
 package com.timfeid.njd.api.live
 
 
-import com.timfeid.njd.api.schedule.ScoringPlay
-import kotlinx.serialization.SerialName
+import com.timfeid.njd.api.common.Play
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Optional
 
 @Serializable
 data class Plays(
-    val allPlays: List<AllPlay>,
-    val currentPlay: CurrentPlay,
+    val allPlays: List<Play>,
+    val currentPlay: Play,
     val penaltyPlays: List<Int>,
     val playsByPeriod: List<PlaysByPeriod>,
     val scoringPlays: List<Int>
-)
+) {
+    fun getScoringPlays (): ArrayList<Play> {
+        val list = ArrayList<Play>()
+
+        for (play in scoringPlays) {
+            list.add(allPlays[play])
+        }
+
+        return list
+    }
+}
