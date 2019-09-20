@@ -10,4 +10,9 @@ data class Status(
     val detailedState: String,
     val startTimeTBD: Boolean,
     val statusCode: String
-)
+) {
+    companion object {
+        val GAME_STATUS_FINAL = "6"
+        val GAME_STATUS_SCHEDULED = "1"
+    }
+}

@@ -2,13 +2,15 @@ package com.timfeid.njd.api.schedule
 
 
 import com.timfeid.njd.BuildConfig
+import com.timfeid.njd.api.live.SkaterStats
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Player(
     val jerseyNumber: String? = null,
     val person: Person,
-    val position: Position
+    val position: Position,
+    val stats: com.timfeid.njd.api.live.Stats = com.timfeid.njd.api.live.Stats()
 ) {
     fun findCurrentStats(): Stats {
         for (stat in person.stats!!) {
@@ -23,34 +25,6 @@ data class Player(
             }
         }
 
-        return Stats(
-            assists = 0,
-            blocked = 0,
-            evenTimeOnIce = "0:00",
-            evenTimeOnIcePerGame = "0:00",
-            faceOffPct = 0.0,
-            gameWinningGoals = 0,
-            games = 0,
-            goals = 0,
-            hits = 0,
-            overTimeGoals = 0,
-            penaltyMinutes = "0",
-            pim = 0,
-            plusMinus = 0,
-            points = 0,
-            powerPlayGoals = 0,
-            powerPlayPoints = 0,
-            powerPlayTimeOnIce = "0:00",
-            powerPlayTimeOnIcePerGame = "0:00",
-            shifts = 0,
-            shortHandedGoals = 0,
-            shortHandedPoints = 0,
-            shortHandedTimeOnIce = "0:00",
-            shortHandedTimeOnIcePerGame = "0:00",
-            shotPct = 0.0,
-            shots = 0,
-            timeOnIce = "0:00",
-            timeOnIcePerGame = "0:00"
-        )
+        return Stats()
     }
 }

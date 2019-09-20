@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.timfeid.njd.R
 import com.timfeid.njd.api.schedule.Game
+import com.timfeid.njd.api.schedule.Status
 import java.io.Serializable
 
 
@@ -18,8 +20,6 @@ private const val ARG_GAME = "game"
 class GameFragment : Fragment() {
     protected var game: Game? = null
     private var listener: OnFragmentInteractionListener? = null
-    val GAME_STATUS_FINAL = "7"
-    val GAME_STATUS_SCHEDULED = "1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +35,11 @@ class GameFragment : Fragment() {
         var rootView = inflater.inflate(R.layout.fragment_game, container, false)
 
         var layout = game?.let {
-            if (it.status.statusCode == GAME_STATUS_FINAL) {
+            Log.d("tag", it.status.toString())
+            if (it.status.statusCode == Status.GAME_STATUS_FINAL) {
                 PreviousGameLayout(it, rootView, activity as Activity)
-            } else if (it.status.statusCode == GAME_STATUS_SCHEDULED) {
-                UpcomingGameLayout(it, rootView, activity as Activity)
             } else {
-                LiveGameLayout(it, rootView, activity as Activity)
+                UpcomingGameLayout(it, rootView, activity as Activity)
             }
         }
 

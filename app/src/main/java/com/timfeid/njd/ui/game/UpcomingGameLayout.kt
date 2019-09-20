@@ -22,7 +22,6 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
     override fun initView() {
         team = if (game.teams.home.team.id.toString() == BuildConfig.API_TEAM_ID) { "home" } else { "away" }
-        Log.d("team", team)
     }
 
     override fun fill() {
@@ -34,7 +33,6 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
     fun getBroadcastInfo (): String {
         for (broadcast in game.broadcasts) {
-            Log.d("test", broadcast.toString())
             if (broadcast.type == team) {
                 return broadcast.name
             }
@@ -45,7 +43,6 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
     fun getRadioBroadcastInfo (): String {
         for (broadcast in game.radioBroadcasts) {
-            Log.d("test", broadcast.toString())
             if (broadcast.type == team) {
                 return ", " + broadcast.name
             }

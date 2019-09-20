@@ -17,7 +17,6 @@ data class Content(
     fun findHightlightFor(eventId: Int): Item? {
         for (highlight in highlights.scoreboard.items) {
             for (keyword in highlight.keywords) {
-                Log.d(keyword.value, eventId.toString())
                 if (keyword.type == Keyword.TYPE_EVENT_ID && keyword.value == eventId.toString()) {
                     return highlight
                 }

@@ -7,16 +7,17 @@ import kotlinx.serialization.Optional
 
 @Serializable
 data class GoalieStats(
-    val assists: Int,
-    val evenSaves: Int,
-    val evenShotsAgainst: Int,
-    val goals: Int,
-    val pim: Int,
-    val powerPlaySaves: Int,
-    val powerPlayShotsAgainst: Int,
-    val saves: Int,
-    val shortHandedSaves: Int,
-    val shortHandedShotsAgainst: Int,
-    val shots: Int,
-    val timeOnIce: String
+    val assists: Int = 0,
+    val evenSaves: Int = 0,
+    val evenShotsAgainst: Int = 0,
+    val goals: Int = 0,
+    val pim: Int = 0,
+    val powerPlaySaves: Int = 0,
+    val powerPlayShotsAgainst: Int = 0,
+    val saves: Int = 0,
+    val shortHandedSaves: Int = 0,
+    val shortHandedShotsAgainst: Int = 0,
+    val shots: Int = 0,
+    val timeOnIce: String = "",
+    val savePercentage: Float = 0f
 )
