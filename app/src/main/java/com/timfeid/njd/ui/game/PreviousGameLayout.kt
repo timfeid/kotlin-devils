@@ -99,7 +99,7 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         get() = R.layout.game_previous
 
     fun populateThreeStars () {
-        if (game.decisions != null && liveGame != null) {
+        if (game.decisions != null && liveGame != null && game.decisions!!.firstStar != null) {
             game.decisions!!.firstStar?.id?.let { populateStar("first", liveGame!!.findPlayerById(it)) }
             game.decisions!!.secondStar?.id?.let { populateStar("second", liveGame!!.findPlayerById(it)) }
             game.decisions!!.thirdStar?.id?.let { populateStar("third", liveGame!!.findPlayerById(it)) }

@@ -36,10 +36,10 @@ class GameFragment : Fragment() {
 
         var layout = game?.let {
             Log.d("tag", it.status.toString())
-            if (it.status.statusCode == Status.GAME_STATUS_FINAL) {
-                PreviousGameLayout(it, rootView, activity as Activity)
-            } else {
+            if (it.status.statusCode == Status.GAME_STATUS_SCHEDULED) {
                 UpcomingGameLayout(it, rootView, activity as Activity)
+            } else {
+                PreviousGameLayout(it, rootView, activity as Activity)
             }
         }
 
