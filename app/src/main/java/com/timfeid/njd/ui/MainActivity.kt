@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.media.MediaFragment
-import com.timfeid.njd.ui.media.MediaViewer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.hamburger.*
 

@@ -5,11 +5,9 @@ import android.util.Log
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.content.Image
 import com.timfeid.njd.api.content.Keyword
-import com.timfeid.njd.ui.media.NewsAdapter
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Optional
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL

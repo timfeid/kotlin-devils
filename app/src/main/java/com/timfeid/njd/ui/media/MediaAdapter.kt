@@ -12,14 +12,48 @@ import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import com.squareup.picasso.Picasso
 import com.timfeid.njd.R
+import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.media.Doc
+import com.timfeid.njd.api.media.News
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import java.net.URL
 
 
-open class MediaAdapter(protected var fragmentManager: FragmentManager) :
+open class MediaAdapter(protected var fragmentManager: FragmentManager, val topicId: String) :
     RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            fetchMedia()
+            CoroutineScope(Dispatchers.Main).launch {
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun fetchMedia (): News {
+        val url = UrlMaker(topicId.toString())
+        url.baseUrl = "https://search-api.svc.nhl.com/svc/search/v2/nhl_global_en/topic/"
+
+        val json = Json(JsonConfiguration(strictMode = false))
+
+        Log.d("raw", url.get())
+
+        val raw = URL(url.get()).readText()
+
+        val parsed = json.parse(News.serializer(), raw)
+
+        for (doc in parsed.docs) {
+            mediaDataset.add(doc)
+        }
+
+        return parsed
+    }
+
     var mediaDataset = mutableListOf<Doc>()
 
     inner class ViewHolder(v: LinearLayout) : RecyclerView.ViewHolder(v) {
