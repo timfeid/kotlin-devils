@@ -49,7 +49,7 @@ open class MediaAdapter(protected var fragmentManager: FragmentManager) :
 
         var item = mediaDataset[position]
 
-        if (item.id == "") {
+        if (item.id.isNullOrBlank()) {
             CoroutineScope(Dispatchers.Main).launch {
                 item.reload().let {
                     item = it.await()
