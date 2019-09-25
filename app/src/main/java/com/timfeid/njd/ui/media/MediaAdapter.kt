@@ -21,6 +21,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
+import androidx.core.content.ContextCompat.startActivity
+import android.content.Intent
+import java.io.Serializable
 
 
 open class MediaAdapter(protected var fragmentManager: FragmentManager, val topicId: String) :
@@ -113,6 +116,13 @@ open class MediaAdapter(protected var fragmentManager: FragmentManager, val topi
             item.description!!.isNotBlank() -> item.description
             else -> "hermmm"
         }
+
+        holder.button.setOnClickListener { v ->
+            val intent = Intent(v.context, MediaViewActivity::class.java)
+            intent.putExtra("news", item)
+            v.context.startActivity(intent)
+        }
+
 //        holder.button.setOnClickListener(item.getListener(activity))
 //        if (position == 0) {
 //            val r = activity.applicationContext.resources

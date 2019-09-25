@@ -10,7 +10,7 @@ data class Keyword(
     val displayName: String = "",
     val type: String = "",
     val value: String = ""
-) {
+) : java.io.Serializable {
     companion object {
         val TYPE_EVENT_ID = "statsEventId"
     }

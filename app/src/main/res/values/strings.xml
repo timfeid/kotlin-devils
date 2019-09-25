@@ -26,4 +26,5 @@
     <string name="boxscore_header">Boxscore</string>
     <string name="linescore_header">Linescore</string>
     <string name="players_on_ice_header">Players on Ice</string>
+    <string name="view">View</string>
 </resources>

@@ -9,4 +9,4 @@ import kotlinx.serialization.Optional
 data class ContributorPerson(
     val name: String = "",
     val twitter: String = ""
-)
+) : java.io.Serializable

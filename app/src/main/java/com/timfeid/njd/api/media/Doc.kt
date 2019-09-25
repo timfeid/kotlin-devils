@@ -1,10 +1,12 @@
 package com.timfeid.njd.api.media
 
 
+import android.os.Parcelable
 import android.util.Log
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.content.Image
 import com.timfeid.njd.api.content.Keyword
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,6 +15,7 @@ import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
 
 @Serializable
+@Parcelize
 data class Doc(
     val approval: String = "",
     val body: String = "",
@@ -37,10 +40,9 @@ data class Doc(
     val subhead: String? = "",
     val description: String? = "",
     val tagline: String? = "",
-    val tokenData: TokenData = TokenData(),
     val type: String = "",
     val url: String = ""
-) {
+) : Parcelable {
     fun reload(): Deferred<Doc> {
         return CoroutineScope(Dispatchers.IO).async{
             fetchAsset()

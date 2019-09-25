@@ -7,4 +7,4 @@ import kotlinx.serialization.Optional
 
 @Serializable
 class PrimaryKeyword(
-)
+) : java.io.Serializable

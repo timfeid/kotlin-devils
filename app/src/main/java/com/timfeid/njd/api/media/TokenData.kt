@@ -7,4 +7,4 @@ import kotlinx.serialization.Optional
 
 @Serializable
 class TokenData(
-)
+) : java.io.Serializable

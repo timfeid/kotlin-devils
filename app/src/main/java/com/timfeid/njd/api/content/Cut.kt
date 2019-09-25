@@ -13,4 +13,4 @@ data class Cut(
     val height: Int = 0,
     val src: String = "",
     val width: Int = 0
-)
+) : java.io.Serializable

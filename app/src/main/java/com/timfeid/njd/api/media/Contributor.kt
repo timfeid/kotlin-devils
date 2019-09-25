@@ -9,4 +9,4 @@ import kotlinx.serialization.Optional
 data class Contributor(
     val contributors: List<ContributorPerson> = listOf(),
     val source: String = ""
-)
+) : java.io.Serializable
