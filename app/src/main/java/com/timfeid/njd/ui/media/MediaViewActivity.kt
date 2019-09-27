@@ -1,10 +1,8 @@
 package com.timfeid.njd.ui.media
 
 import androidx.appcompat.app.AppCompatActivity
-import android.webkit.WebSettings
-import android.webkit.WebView
 import android.os.Bundle
-import android.util.Log
+import android.webkit.JavascriptInterface
 import com.timfeid.njd.R
 import com.timfeid.njd.api.media.Doc
 import kotlinx.android.synthetic.main.activity_media_view.*
@@ -12,19 +10,28 @@ import kotlinx.android.synthetic.main.activity_media_view.*
 
 
 
+
+
+
+
 class MediaViewActivity : AppCompatActivity() {
+
+    var doc: Doc? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_view)
 
-        val doc = intent.extras!!["news"] as Doc
+        doc = intent.extras!!["news"] as Doc
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = doc!!.headline
 
-        web_view.loadData(doc.body, "text/html; charset=utf-8", "UTF-8")
+        val webSettings = web_view.settings
+        webSettings.javaScriptEnabled = true
+        web_view.addJavascriptInterface(WebConnector(doc!!), "webConnector")
+        web_view.loadUrl("file:///android_asset/njd-helper/index.html")
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -32,4 +39,13 @@ class MediaViewActivity : AppCompatActivity() {
 
         return true
     }
+
+    internal class WebConnector(val doc: Doc) {
+        @JavascriptInterface
+        fun newsId(): String {
+            return doc.id!!
+        }
+    }
+
+
 }

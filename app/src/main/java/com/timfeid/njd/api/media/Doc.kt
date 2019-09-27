@@ -6,6 +6,7 @@ import android.util.Log
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.content.Image
 import com.timfeid.njd.api.content.Keyword
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerialName
@@ -43,6 +44,20 @@ data class Doc(
     val type: String = "",
     val url: String = ""
 ) : Parcelable {
+    @IgnoredOnParcel
+    val bestBlurb: String = when {
+        !subhead.isNullOrEmpty() -> subhead
+        !description.isNullOrEmpty() -> description
+        else -> ""
+    }
+
+    @IgnoredOnParcel
+    val bestImage: String? = when {
+        image.cuts.isNotEmpty() -> image.cuts.values.first().src
+        media.image.cuts.isNotEmpty() -> media.image.cuts.values.first().src
+        else -> null
+    }
+
     fun reload(): Deferred<Doc> {
         return CoroutineScope(Dispatchers.IO).async{
             fetchAsset()

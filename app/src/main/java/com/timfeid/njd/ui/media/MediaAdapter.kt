@@ -21,9 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
-import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
-import java.io.Serializable
 
 
 open class MediaAdapter(protected var fragmentManager: FragmentManager, val topicId: String) :
@@ -83,39 +81,15 @@ open class MediaAdapter(protected var fragmentManager: FragmentManager, val topi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        var item = mediaDataset[position]
-
-        if (item.id.isNullOrBlank()) {
-            CoroutineScope(Dispatchers.Main).launch {
-                item.reload().let {
-                    item = it.await()
-                    mediaDataset[position] = item
-                    updateHolder(holder, item)
-                }
-            }
-        }
-
-
-    }
-
-    private fun updateHolder(holder: ViewHolder, item: Doc) {
+        val item = mediaDataset[position]
         holder.title.text = item.headline
-        val image: String? = when {
-            item.image.cuts.isNotEmpty() -> item.image.cuts.values.first().src
-            item.media.image.cuts.isNotEmpty() -> item.media.image.cuts.values.first().src
-            else -> null
-        }
 
+        val image = item.bestImage
         if (image != null) {
             Picasso.get().load(image).into(holder.image)
         }
 
-        holder.blurb.text = when {
-            item.subhead!!.isNotBlank() -> item.subhead
-            item.description!!.isNotBlank() -> item.description
-            else -> "hermmm"
-        }
+        holder.blurb.text = item.bestBlurb
 
         holder.button.setOnClickListener { v ->
             val intent = Intent(v.context, MediaViewActivity::class.java)
@@ -123,17 +97,14 @@ open class MediaAdapter(protected var fragmentManager: FragmentManager, val topi
             v.context.startActivity(intent)
         }
 
-//        holder.button.setOnClickListener(item.getListener(activity))
-//        if (position == 0) {
-//            val r = activity.applicationContext.resources
-//            val px = TypedValue.applyDimension(
-//                TypedValue.COMPLEX_UNIT_DIP,
-//                16f,
-//                r.displayMetrics
-//            ).toInt()
-//            val params = holder.card.layoutParams as LinearLayout.LayoutParams
-//            params.setMargins(px, px, px, px / 2)
-//        }
+        if (item.id.isNullOrBlank()) {
+            CoroutineScope(Dispatchers.Main).launch {
+                item.reload().let {
+                    mediaDataset[position] = it.await()
+                    onBindViewHolder(holder, position)
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
