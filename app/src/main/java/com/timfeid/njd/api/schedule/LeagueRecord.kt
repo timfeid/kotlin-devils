@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LeagueRecord(
-    val losses: Int,
+    val losses: Int = 0,
     val ot: Int = 0,
-    val type: String,
-    val wins: Int
+    val type: String = "",
+    val wins: Int = 0
 )

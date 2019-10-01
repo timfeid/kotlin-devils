@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.timfeid.njd.R
 import com.google.android.material.tabs.TabLayout
-
+import com.timfeid.njd.ui.TabAdapter
 
 
 class MediaFragment : Fragment() {
@@ -21,7 +21,7 @@ class MediaFragment : Fragment() {
     ): View? {
         var rootView = inflater.inflate(R.layout.fragment_media, container, false)
 
-        val adapter = MediaPageAdapter(childFragmentManager)
+        val adapter = TabAdapter(childFragmentManager)
         adapter.addFragment(MediaListFragment("277567796"), "News")
         adapter.addFragment(MediaListFragment("306694492"), "Videos")
 //        adapter.addFragment(new MediaFragment(), "Podcasts");
