@@ -14,7 +14,10 @@ import com.timfeid.njd.api.standings.Standings as StandingsResponse
 class Standings {
 
     companion object {
-        val instance = Standings()
+        private val instance = Standings()
+        fun getInstance (): Standings {
+            return instance
+        }
     }
 
     var standings: StandingsResponse? = null
@@ -23,6 +26,7 @@ class Standings {
         runBlocking {
             standings = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
                 val url = UrlMaker("standings")
+                url.addParam("hydrate", "record(overall),division,conference,team(nextSchedule(team),previousSchedule(team))")
 
                 val json = Json(JsonConfiguration(strictMode = false))
 

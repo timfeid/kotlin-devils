@@ -29,7 +29,7 @@ class MainStandingsFragment : Fragment() {
 
         val adapter = TabAdapter(childFragmentManager)
         adapter.addFragment(WildcardFragment(), "Wildcard")
-        adapter.addFragment(WildcardFragment(), "Division")
+        adapter.addFragment(DivisionFragment(), "Division")
         adapter.addFragment(WildcardFragment(), "Conference")
         view_pager.adapter = adapter
 

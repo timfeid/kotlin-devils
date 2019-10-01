@@ -27,4 +27,12 @@
     <string name="linescore_header">Linescore</string>
     <string name="players_on_ice_header">Players on Ice</string>
     <string name="view">View</string>
+    <string name="gp">GP</string>
+    <string name="w">W</string>
+    <string name="l">L</string>
+    <string name="ot">OT</string>
+    <string name="pts">PTS</string>
+    <string name="row">ROW</string>
+    <string name="diff">DIFF</string>
+    <string name="strk">STRK</string>
 </resources>

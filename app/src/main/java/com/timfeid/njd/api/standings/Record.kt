@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Record(
     val team: Team = Team(),
-    val leagueRecord: LeagueRecord = LeagueRecord()
+    val leagueRecord: LeagueRecord = LeagueRecord(),
+    val wildCardRank: String = "0"
 )
