@@ -30,7 +30,7 @@ class MainStandingsFragment : Fragment() {
         val adapter = TabAdapter(childFragmentManager)
         adapter.addFragment(WildcardFragment(), "Wildcard")
         adapter.addFragment(DivisionFragment(), "Division")
-        adapter.addFragment(WildcardFragment(), "Conference")
+        adapter.addFragment(LeagueFragment(), "League")
         view_pager.adapter = adapter
 
         tabs.setupWithViewPager(view_pager)

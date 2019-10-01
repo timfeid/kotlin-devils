@@ -7,6 +7,10 @@
         android:id="@+id/standings"
         android:orientation="vertical">
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/standings_table" />
 
     </LinearLayout>
 </ScrollView>
