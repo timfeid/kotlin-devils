@@ -12,6 +12,7 @@ import com.timfeid.njd.R
 import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.media.MediaFragment
 import com.timfeid.njd.ui.standings.MainStandingsFragment
+import com.timfeid.njd.ui.stats.StatsMainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.hamburger.*
 
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
 
         if (savedInstanceState == null) {
             hamburger_menu.setCheckedItem(R.id.nav_schedule)
-            changeFragment(MainStandingsFragment())
+            changeFragment(StatsMainFragment())
         }
     }
 
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
         hamburger_menu.setNavigationItemSelectedListener{
             when (it.itemId){
                 R.id.nav_schedule -> changeFragment(ScheduleFragment())
-                R.id.nav_player_stats -> toast("Player stats clicked")
+                R.id.nav_player_stats -> changeFragment(StatsMainFragment())
                 R.id.nav_media -> changeFragment(MediaFragment())
                 R.id.nav_standings -> changeFragment(MainStandingsFragment())
 
