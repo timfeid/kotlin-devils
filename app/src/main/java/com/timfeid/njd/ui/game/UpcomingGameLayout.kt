@@ -89,11 +89,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 assists.setText("${player.findCurrentStats().assists.toString()}A")
                 info.setText("#${player.jerseyNumber}, ${player.position.abbreviation}")
 
-                getImageFor(player.person.id).let {
-                    imageCircleUrl(photo,
-                        it
-                    )
-                }
+                imageCircleUrl(photo, player.person.getImageUrl())
 
 
                 topScorersLayout.addView(layout)

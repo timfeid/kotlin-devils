@@ -114,7 +114,7 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
             val name: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_name"))
             val stats: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_stats"))
 
-            imageCircleUrl(image, getImageFor(star.person.id))
+            imageCircleUrl(image, star.person.getImageUrl())
             name.text = star.person.shortName()
 
             if (star.position.code != "G") {
@@ -224,7 +224,7 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
 
                 if (person != null) {
-                    imageCircleUrl(photo, getImageFor(person.player.id))
+                    imageCircleUrl(photo, person.player.getImageUrl())
                 }
 
                 var assisters = play.getAssists().joinToString { it.player.shortName() }

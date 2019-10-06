@@ -29,10 +29,11 @@ import com.timfeid.njd.api.teams.Teams
 import com.timfeid.njd.ui.standings.Roster
 
 
-open class StatsAdapter(protected open var fragmentManager: FragmentManager) :
+abstract class StatsAdapter(protected open var fragmentManager: FragmentManager) :
     RecyclerView.Adapter<StatsAdapter.ViewHolder>() {
 
     open var dataset: List<Player> = Roster.getInstance().players()
+    var stat = 0
 
     inner class ViewHolder(v: LinearLayout) : RecyclerView.ViewHolder(v) {
         var playerNumber: TextView
@@ -58,10 +59,16 @@ open class StatsAdapter(protected open var fragmentManager: FragmentManager) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = dataset[position]
         holder.playerName.text = item.person.shortName()
+        holder.stat.text = stat(item)
+        holder.playerNumber.text = "#${item.jerseyNumber} | ${item.position.code}"
+        Picasso.get().load(item.person.getImageUrl()).into(holder.image)
     }
 
     override fun getItemCount(): Int {
         return dataset.count()
 
     }
+
+    abstract fun stat(player: Player): String
+    abstract fun sortBy(pos: Int)
 }

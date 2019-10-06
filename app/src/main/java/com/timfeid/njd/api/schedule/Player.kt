@@ -10,7 +10,8 @@ data class Player(
     val jerseyNumber: String? = null,
     val person: Person,
     val position: Position,
-    val stats: com.timfeid.njd.api.live.Stats = com.timfeid.njd.api.live.Stats()
+    val stats: com.timfeid.njd.api.live.Stats = com.timfeid.njd.api.live.Stats(),
+    val id: Int = 0
 ) {
     fun findCurrentStats(): Stats {
         for (stat in person.stats!!) {

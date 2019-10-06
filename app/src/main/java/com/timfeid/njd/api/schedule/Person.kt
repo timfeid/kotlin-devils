@@ -36,4 +36,8 @@ data class Person(
 
         return "$firstInitial. $lastName"
     }
+
+    fun getImageUrl (): String {
+        return "https://nhl.bamcontent.com/images/headshots/current/60x60/$id.png"
+    }
 }

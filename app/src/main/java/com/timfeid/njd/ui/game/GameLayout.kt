@@ -215,7 +215,4 @@ internal abstract class GameLayout(
         Picasso.get().load(url).into(imageView)
     }
 
-    fun getImageFor(playerId: Int): String {
-        return "https://nhl.bamcontent.com/images/headshots/current/60x60/$playerId.png"
-    }
 }
