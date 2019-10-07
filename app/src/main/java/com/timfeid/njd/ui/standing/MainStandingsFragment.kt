@@ -1,4 +1,4 @@
-package com.timfeid.njd.ui.stats
+package com.timfeid.njd.ui.standing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.TabAdapter
-import com.timfeid.njd.ui.standings.DivisionFragment
-import com.timfeid.njd.ui.standings.LeagueFragment
-import com.timfeid.njd.ui.standings.WildcardFragment
 import kotlinx.android.synthetic.main.fragment_main_standings.*
 
-class StatsMainFragment : Fragment() {
+class MainStandingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,10 +22,12 @@ class StatsMainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = TabAdapter(childFragmentManager)
-        adapter.addFragment(PlayerListFragment(), "Players")
-        adapter.addFragment(GoalieListFragment(), "Goalies")
+        adapter.addFragment(WildcardFragment(), "Wildcard")
+        adapter.addFragment(DivisionFragment(), "Division")
+        adapter.addFragment(LeagueFragment(), "League")
         view_pager.adapter = adapter
 
         tabs.setupWithViewPager(view_pager)
     }
+
 }

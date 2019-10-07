@@ -52,4 +52,4 @@ data class Stats(
     val powerPlaySavePercentage: Double = 0.0,
     val shortHandedSavePercentage: Double = 0.0,
     val evenStrengthSavePercentage: Double = 0.0
-)
+) : java.io.Serializable

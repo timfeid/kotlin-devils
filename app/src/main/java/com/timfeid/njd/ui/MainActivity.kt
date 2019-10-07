@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.media.MediaFragment
-import com.timfeid.njd.ui.standings.MainStandingsFragment
-import com.timfeid.njd.ui.stats.StatsMainFragment
+import com.timfeid.njd.ui.standing.MainStandingsFragment
+import com.timfeid.njd.ui.stat.StatsMainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.hamburger.*
 

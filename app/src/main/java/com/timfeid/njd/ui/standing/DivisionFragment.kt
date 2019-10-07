@@ -1,6 +1,4 @@
-package com.timfeid.njd.ui.standings
-
-import android.util.Log
+package com.timfeid.njd.ui.standing
 
 class DivisionFragment : StandingsFragment() {
     override fun fillStandings () {

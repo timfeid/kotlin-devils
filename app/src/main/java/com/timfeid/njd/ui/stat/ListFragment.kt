@@ -1,4 +1,4 @@
-package com.timfeid.njd.ui.stats
+package com.timfeid.njd.ui.stat
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,16 +1,8 @@
 package com.timfeid.njd.ui.media
 
-import android.util.Log
-import android.widget.LinearLayout
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
-import com.timfeid.njd.R
 import com.timfeid.njd.api.schedule.Player
-import com.timfeid.njd.ui.standings.Roster
+import com.timfeid.njd.ui.standing.Roster
 
 
 open class PlayerStatsAdapter(override var fragmentManager: FragmentManager) :

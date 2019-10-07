@@ -1,6 +1,5 @@
-package com.timfeid.njd.ui.standings
+package com.timfeid.njd.ui.standing
 
-import android.util.Log
 import com.timfeid.njd.api.schedule.Division
 import com.timfeid.njd.api.standings.Record
 

@@ -1,19 +1,8 @@
-package com.timfeid.njd.ui.stats
+package com.timfeid.njd.ui.stat
 
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.media.GoalieStatsAdapter
-import com.timfeid.njd.ui.media.PlayerStatsAdapter
 import com.timfeid.njd.ui.media.StatsAdapter
 
 class GoalieListFragment() : ListFragment() {

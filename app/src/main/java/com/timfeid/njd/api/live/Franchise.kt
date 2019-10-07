@@ -1,13 +1,16 @@
 package com.timfeid.njd.api.live
 
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 
 @Serializable
+@Parcelize
 data class Franchise(
-    val franchiseId: Int,
-    val link: String,
-    val teamName: String
-)
+    val franchiseId: Int = 0,
+    val link: String = "",
+    val teamName: String = ""
+) : Parcelable

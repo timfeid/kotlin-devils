@@ -1,32 +1,21 @@
 package com.timfeid.njd.ui.media
 
-import android.util.Log
 import android.widget.LinearLayout
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.Button
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentManager
 import com.squareup.picasso.Picasso
 import com.timfeid.njd.R
-import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.media.Doc
-import com.timfeid.njd.api.media.News
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import java.net.URL
-import android.content.Intent
-import com.timfeid.njd.BuildConfig
-import com.timfeid.njd.api.schedule.Person
 import com.timfeid.njd.api.schedule.Player
-import com.timfeid.njd.api.teams.Teams
-import com.timfeid.njd.ui.standings.Roster
+import com.timfeid.njd.ui.standing.Roster
+import androidx.core.content.ContextCompat.startActivity
+import com.timfeid.njd.ui.player.PlayerActivity
+import android.content.Intent
+import java.io.Serializable
 
 
 abstract class StatsAdapter(protected open var fragmentManager: FragmentManager) :
@@ -40,12 +29,14 @@ abstract class StatsAdapter(protected open var fragmentManager: FragmentManager)
         var playerName: TextView
         var stat: TextView
         var image: ImageView
+        var card: CardView
 
         init {
             stat = v.findViewById(R.id.stat)
             image = v.findViewById(R.id.image)
             playerNumber = v.findViewById(R.id.player_number)
             playerName= v.findViewById(R.id.player_name)
+            card = v.findViewById(R.id.card_view)
         }
     }
 
@@ -62,6 +53,11 @@ abstract class StatsAdapter(protected open var fragmentManager: FragmentManager)
         holder.stat.text = stat(item)
         holder.playerNumber.text = "#${item.jerseyNumber} | ${item.position.code}"
         Picasso.get().load(item.person.getImageUrl()).into(holder.image)
+        holder.card.setOnClickListener {
+            val intent = Intent(it.context, PlayerActivity::class.java)
+            intent.putExtra("player", item)
+            it.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

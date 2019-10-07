@@ -1,21 +1,15 @@
-package com.timfeid.njd.ui.standings
+package com.timfeid.njd.ui.stat
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
-import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.standings.Standings
 import com.timfeid.njd.ui.TabAdapter
 import kotlinx.android.synthetic.main.fragment_main_standings.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import java.net.URL
 
-class MainStandingsFragment : Fragment() {
+class StatsMainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,12 +22,10 @@ class MainStandingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = TabAdapter(childFragmentManager)
-        adapter.addFragment(WildcardFragment(), "Wildcard")
-        adapter.addFragment(DivisionFragment(), "Division")
-        adapter.addFragment(LeagueFragment(), "League")
+        adapter.addFragment(PlayerListFragment(), "Players")
+        adapter.addFragment(GoalieListFragment(), "Goalies")
         view_pager.adapter = adapter
 
         tabs.setupWithViewPager(view_pager)
     }
-
 }

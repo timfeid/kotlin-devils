@@ -1,4 +1,4 @@
-package com.timfeid.njd.ui.standings
+package com.timfeid.njd.ui.standing
 
 import android.os.Bundle
 import android.view.LayoutInflater

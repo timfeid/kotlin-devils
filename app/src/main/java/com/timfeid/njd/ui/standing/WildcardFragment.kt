@@ -1,12 +1,8 @@
-package com.timfeid.njd.ui.standings
+package com.timfeid.njd.ui.standing
 
-import android.util.Log
 import com.timfeid.njd.api.schedule.Conference
 import com.timfeid.njd.api.schedule.Division
 import com.timfeid.njd.api.standings.Record
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class WildcardFragment : StandingsFragment() {
     override fun fillStandings () {

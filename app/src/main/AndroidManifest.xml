@@ -18,6 +18,7 @@
 
         </activity>
         <activity android:name=".ui.media.MediaViewActivity" />
+        <activity android:name=".ui.player.PlayerActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

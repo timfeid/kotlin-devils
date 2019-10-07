@@ -20,4 +20,4 @@ data class GoalieStats(
     val shots: Int = 0,
     val timeOnIce: String = "",
     val savePercentage: Float = 0f
-)
+) : java.io.Serializable

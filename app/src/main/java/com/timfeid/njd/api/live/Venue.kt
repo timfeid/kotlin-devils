@@ -1,15 +1,18 @@
 package com.timfeid.njd.api.live
 
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 
 @Serializable
+@Parcelize
 data class Venue(
-    val city: String?=null,
-    val id: Int?= null,
-    val link: String,
-    val name: String,
-    val timeZone: TimeZone?=null
-)
+    val city: String = "",
+    val id: Int = 0,
+    val link: String = "",
+    val name: String = "",
+    val timeZone: TimeZone = TimeZone()
+) : Parcelable

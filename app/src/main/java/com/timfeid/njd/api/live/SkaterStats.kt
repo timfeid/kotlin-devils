@@ -26,4 +26,4 @@ data class SkaterStats(
     val shots: Int = 0,
     val takeaways: Int = 0,
     val timeOnIce: String = ""
-)
+) : java.io.Serializable
