@@ -3,6 +3,7 @@ package com.timfeid.njd.ui.media
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.JavascriptInterface
+import com.timfeid.njd.BaseWebConnector
 import com.timfeid.njd.R
 import com.timfeid.njd.api.media.Doc
 import kotlinx.android.synthetic.main.activity_media_view.*
@@ -40,7 +41,12 @@ class MediaViewActivity : AppCompatActivity() {
         return true
     }
 
-    internal class WebConnector(val doc: Doc) {
+    internal class WebConnector(val doc: Doc) : BaseWebConnector() {
+        @JavascriptInterface
+        override fun component(): String {
+            return "news"
+        }
+
         @JavascriptInterface
         fun newsId(): String {
             return doc.id!!

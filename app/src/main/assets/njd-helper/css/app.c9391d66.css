@@ -1,4 +1,4 @@
-#app{margin:15px}
+.player-info{padding:0 1rem;font-size:14px;line-height:18px;border-right:1px solid #000}.player-info:last-child{border-right:none}.player-image{background:#fff;margin:-30px auto 0;border-radius:30px;overflow:hidden;background-size:cover;background-position:50%;height:60px;width:60px;-webkit-box-shadow:0 0 .5rem rgba(0,0,0,.95);box-shadow:0 0 .5rem rgba(0,0,0,.95)}.player-action-image{z-index:-1;height:12rem;width:100%;background-size:cover;background-position:50%;overflow:hidden;position:relative}.player-action-image:after{content:"";-webkit-box-shadow:inset 0 0 5rem rgba(0,0,0,.95);box-shadow:inset 0 0 5rem rgba(0,0,0,.95);position:absolute;top:-200px;right:0;bottom:0;left:0}.player-stats-block{border-top:5px solid #eaeaea;padding:2rem 1rem}
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)

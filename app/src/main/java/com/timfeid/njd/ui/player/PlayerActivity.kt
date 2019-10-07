@@ -17,6 +17,7 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.webkit.JavascriptInterface
+import com.timfeid.njd.BaseWebConnector
 import com.timfeid.njd.api.media.Doc
 import com.timfeid.njd.ui.media.MediaViewActivity
 import kotlinx.android.synthetic.main.activity_player.toolbar
@@ -40,30 +41,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun fill(player: Player) {
-        Picasso.get().load(player.person.getActionImageUrl()).into(action_photo)
-        Picasso.get().load(player.person.getImageUrl()).transform(CircleTransform()).into(player_photo)
-
         supportActionBar!!.title = player.person.fullName
-        name.text = "${player.person.fullName} | #${player.jerseyNumber}"
-        info.text = String.format(Locale.US, "%s   |   %s   |   %slbs   |   Age: %s",
-            player.person.primaryPosition.code,
-            player.person.height,
-            player.person.weight,
-            player.person.currentAge
-        )
-
-        val formatter = SimpleDateFormat("MMMM dd, yyyy", Locale.US)
-        birthday.text = info("Born", formatter.format(player.person.birthdate()))
-        birthplace.text = info("Birthplace", "${player.person.birthCity}, ${if (player.person.birthStateProvince.isNotEmpty()) { player.person.birthStateProvince+", " } else { "" }}${player.person.birthCountry}")
-        shoots.text = info("Shoots", player.person.shootsCatches)
-
-        val draftInfo = player.person.draft
-        draft.text = info("Drafted", if (draftInfo.isEmpty()) {
-            "Undrafted"
-        } else {
-            "${draftInfo[0].year}, rd ${draftInfo[0].round} pk ${draftInfo[0].pickInRound}, #${draftInfo[0].pickOverall} overall by ${draftInfo[0].team.abbreviation}"
-        })
-
         val webSettings = webview.settings
         webSettings.javaScriptEnabled = true
         webview.addJavascriptInterface(WebConnector(player), "webConnector")
@@ -88,13 +66,14 @@ class PlayerActivity : AppCompatActivity() {
         return true
     }
 
-    internal class WebConnector(val player: Player) {
+    internal class WebConnector(val player: Player): BaseWebConnector() {
         @JavascriptInterface
         fun load(): Int {
             return player.person.id
         }
+
         @JavascriptInterface
-        fun component(): String {
+        override fun component(): String {
             return "player-stats"
         }
     }
