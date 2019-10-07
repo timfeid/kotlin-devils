@@ -227,7 +227,9 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
                     imageCircleUrl(photo, person.player.getImageUrl())
                 }
 
-                var assisters = play.getAssists().joinToString { it.player.shortName() }
+                var assisters = play.getAssists().joinToString {
+                    it.player.shortName()
+                }
 
                 if (assisters == "") {
                     assisters = "Unassisted"
