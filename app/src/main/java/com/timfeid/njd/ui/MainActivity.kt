@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
 
         if (savedInstanceState == null) {
             hamburger_menu.setCheckedItem(R.id.nav_schedule)
-            changeFragment(StatsMainFragment())
+            changeFragment(HomeFragment())
         }
     }
 
@@ -54,11 +54,11 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
 
         hamburger_menu.setNavigationItemSelectedListener{
             when (it.itemId){
-                R.id.nav_schedule -> changeFragment(ScheduleFragment())
+                R.id.nav_home -> changeFragment(HomeFragment())
+                R.id.nav_schedule -> changeFragment(HomeFragment())
                 R.id.nav_player_stats -> changeFragment(StatsMainFragment())
                 R.id.nav_media -> changeFragment(MediaFragment())
                 R.id.nav_standings -> changeFragment(MainStandingsFragment())
-
             }
             // Close the drawer
             drawer_layout.closeDrawer(GravityCompat.START)

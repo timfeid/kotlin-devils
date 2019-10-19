@@ -16,16 +16,24 @@ import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import org.json.JSONException
+import java.lang.reflect.Modifier.isFinal
+
+
 
 class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
     var schedule: Schedule? = null
     var games = mutableListOf<Game>()
+    var onCompleteCallback: (() -> Unit)? = null
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
             fetchSchedule()
             CoroutineScope(Dispatchers.Main).launch {
                 notifyDataSetChanged()
+                if (onCompleteCallback != null) {
+                    onCompleteCallback!!.invoke()
+                }
             }
         }
     }
@@ -71,6 +79,9 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
     }
 
+    fun onComplete (callback: () -> Unit) {
+        onCompleteCallback = callback
+    }
 
     override fun getItem(position: Int): Fragment {
         if (schedule == null) {

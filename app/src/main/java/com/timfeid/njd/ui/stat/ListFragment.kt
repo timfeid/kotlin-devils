@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.timfeid.njd.R
+import com.timfeid.njd.ui.FontSpinnerAdapter
 import com.timfeid.njd.ui.media.StatsAdapter
 
 abstract class ListFragment() : Fragment() {
@@ -32,7 +33,7 @@ abstract class ListFragment() : Fragment() {
         recyclerView.adapter = fragmentManager?.let { getAdapter(it) }
 
         val spinner: Spinner = view.findViewById(R.id.spinner)
-        val arrayAdapter = ArrayAdapter<String>(
+        val arrayAdapter = FontSpinnerAdapter(
             context!!,
             android.R.layout.simple_spinner_dropdown_item,
             getSortOptions()

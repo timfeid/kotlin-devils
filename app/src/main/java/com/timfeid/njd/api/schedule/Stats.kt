@@ -2,6 +2,8 @@ package com.timfeid.njd.api.schedule
 
 
 import kotlinx.serialization.Serializable
+import java.util.*
+import kotlin.math.floor
 
 @Serializable
 data class Stats(
@@ -52,4 +54,22 @@ data class Stats(
     val powerPlaySavePercentage: Double = 0.0,
     val shortHandedSavePercentage: Double = 0.0,
     val evenStrengthSavePercentage: Double = 0.0
-) : java.io.Serializable
+) : java.io.Serializable {
+    val averageTimeOnIce: String
+        get() {
+            return String.format("%d:%02d", floor(averageTimeOnIceInSeconds / 60.toDouble()).toInt(), averageTimeOnIceInSeconds% 60)
+//            return "${floor(averageTimeOnIceInSeconds / 60.toDouble())}:${averageTimeOnIceInSeconds% 60}"
+        }
+    val averageTimeOnIceInSeconds: Int
+        get () {
+            return if (games == 0) { 0 } else { timeOnIceInSeconds / games }
+        }
+    val timeOnIceInSeconds: Int
+        get() {
+            val midPoint = timeOnIce.indexOf(':')
+            val minutes = Integer.parseInt(timeOnIce.substring(0, midPoint))
+            val seconds = Integer.parseInt(timeOnIce.substring(midPoint + 1))
+
+            return minutes * 60 + seconds
+        }
+}

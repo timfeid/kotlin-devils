@@ -37,7 +37,7 @@ open class PlayerStatsAdapter(override var fragmentManager: FragmentManager) :
             }
             4 -> {
                 dataset = dataset.sortedByDescending {
-                    it.findCurrentStats().timeOnIcePerGame
+                    it.findCurrentStats().averageTimeOnIceInSeconds
                 }
             }
         }
@@ -52,7 +52,7 @@ open class PlayerStatsAdapter(override var fragmentManager: FragmentManager) :
             1 -> player.findCurrentStats().goals.toString()
             2 -> player.findCurrentStats().assists.toString()
             3 -> player.findCurrentStats().pim.toString()
-            4 -> player.findCurrentStats().timeOnIcePerGame
+            4 -> player.findCurrentStats().averageTimeOnIce
             else -> ""
         }
     }

@@ -23,7 +23,7 @@ class MediaFragment : Fragment() {
 
         val adapter = TabAdapter(childFragmentManager)
         adapter.addFragment(MediaListFragment("277567796"), "News")
-        adapter.addFragment(MediaListFragment("306694492"), "Videos")
+        adapter.addFragment(MediaListFragment("277437418"), "Videos")
 //        adapter.addFragment(new MediaFragment(), "Podcasts");
 
         viewPager = rootView.findViewById(R.id.view_pager)

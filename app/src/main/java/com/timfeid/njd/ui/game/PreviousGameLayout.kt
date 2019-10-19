@@ -285,7 +285,7 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
             var timeRemaining = liveData.linescore.currentPeriodTimeRemaining
 
-            if (gameData.status.statusCode == Status.GAME_STATUS_FINAL) {
+            if (gameData.status.isFinal()) {
                 if (liveData.linescore.hasShootout) {
                     timeRemaining += "/SO"
                 } else if (liveData.linescore.currentPeriodOrdinal == "OT") {
