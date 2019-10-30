@@ -16,9 +16,13 @@ import java.net.URL
 class Roster {
 
     companion object {
-        private val instance = Roster()
+        private var instance: Roster? = null
         fun getInstance (): Roster {
-            return instance
+            if (instance == null) {
+                instance = Roster()
+            }
+            
+            return instance!!
         }
     }
 

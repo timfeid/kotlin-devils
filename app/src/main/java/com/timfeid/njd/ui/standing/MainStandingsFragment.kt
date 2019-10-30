@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.TabAdapter
 import kotlinx.android.synthetic.main.fragment_main_standings.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainStandingsFragment : Fragment() {
     override fun onCreateView(
@@ -21,13 +24,18 @@ class MainStandingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TabAdapter(childFragmentManager)
-        adapter.addFragment(WildcardFragment(), "Wildcard")
-        adapter.addFragment(DivisionFragment(), "Division")
-        adapter.addFragment(LeagueFragment(), "League")
-        view_pager.adapter = adapter
+        CoroutineScope(Dispatchers.IO).launch {
+            Standings.getInstance()
+            CoroutineScope(Dispatchers.Main).launch {
+                val adapter = TabAdapter(childFragmentManager)
+                adapter.addFragment(WildcardFragment(), "Wildcard")
+                adapter.addFragment(DivisionFragment(), "Division")
+                adapter.addFragment(LeagueFragment(), "League")
+                view_pager.adapter = adapter
 
-        tabs.setupWithViewPager(view_pager)
+                tabs.setupWithViewPager(view_pager)
+            }
+        }
     }
 
 }

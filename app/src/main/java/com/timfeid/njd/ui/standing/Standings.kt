@@ -14,9 +14,13 @@ import com.timfeid.njd.api.standings.Standings as StandingsResponse
 class Standings {
 
     companion object {
-        private val instance = Standings()
+        private var instance: Standings? = null
         fun getInstance (): Standings {
-            return instance
+            if (instance == null) {
+                instance = Standings()
+            }
+
+            return instance!!
         }
     }
 
