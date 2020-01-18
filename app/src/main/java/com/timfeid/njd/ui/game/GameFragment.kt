@@ -20,7 +20,6 @@ private const val ARG_GAME = "game"
 
 class GameFragment : Fragment() {
     protected var game: Game? = null
-    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,28 +46,6 @@ class GameFragment : Fragment() {
         layout?.build()
 
         return rootView
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        listener?.gameFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun gameFragmentInteraction(uri: Uri)
     }
 
     companion object {

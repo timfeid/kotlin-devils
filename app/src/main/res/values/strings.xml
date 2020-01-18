@@ -35,6 +35,11 @@
     <string name="row">ROW</string>
     <string name="diff">DIFF</string>
     <string name="strk">STRK</string>
+    <string name="fragment_home_title">New Jersey Devils</string>
+    <string name="fragment_schedule_title">Schedule</string>
+    <string name="fragment_stats_title">Player Stats</string>
+    <string name="fragment_media_title">Media</string>
+    <string name="fragment_standings_title">Standings</string>
 
     <string-array name="skaters_sort">
         <item>Points</item>

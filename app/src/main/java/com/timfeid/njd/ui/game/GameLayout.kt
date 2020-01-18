@@ -18,6 +18,7 @@ import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.live.Live
 import com.timfeid.njd.api.schedule.LeagueRecord
 import com.timfeid.njd.api.schedule.Schedule
+import com.timfeid.njd.utils.image.CircleTransform
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.lang.StringBuilder
@@ -212,7 +213,7 @@ internal abstract class GameLayout(
     }
 
     fun imageCircleUrl(imageView: ImageView, url: String) {
-        Picasso.get().load(url).into(imageView)
+        Picasso.get().load(url).transform(CircleTransform()).into(imageView)
     }
 
 }

@@ -18,7 +18,7 @@
 
         </activity>
         <activity android:name=".ui.media.MediaViewActivity" />
-        <activity android:name=".ui.game.GameVideoActivity" />
+        <activity android:name=".ui.game.GameVideoActivity" android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
         <activity android:name=".ui.player.PlayerActivity" />
 
         <meta-data

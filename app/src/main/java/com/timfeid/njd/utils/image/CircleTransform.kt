@@ -3,9 +3,15 @@ package com.timfeid.njd.utils.image
 import android.graphics.*
 
 import com.squareup.picasso.Transformation
+import android.graphics.PorterDuffColorFilter
+import android.graphics.PorterDuff
+
+
 
 class CircleTransform : Transformation {
     override fun transform(source: Bitmap): Bitmap {
+
+
         val size = Math.min(source.width, source.height)
 
         val x = (source.width - size) / 2
@@ -23,6 +29,9 @@ class CircleTransform : Transformation {
         val shader = BitmapShader(squaredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
         paint.shader = shader
         paint.isAntiAlias = true
+
+        val mMode = PorterDuff.Mode.DST_OVER
+        paint.colorFilter = PorterDuffColorFilter(Color.WHITE, mMode)
 
         val r = size / 2f
         canvas.drawCircle(r, r, r, paint)

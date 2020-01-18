@@ -15,25 +15,16 @@ import com.timfeid.njd.ui.standing.MainStandingsFragment
 import com.timfeid.njd.ui.stat.StatsMainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.hamburger.*
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelector
-import com.google.android.exoplayer2.util.Util.getUserAgent
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.EventLogger
-import kotlinx.android.synthetic.main.standings_header.*
-import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES
-import com.google.android.exoplayer2.source.hls.DefaultHlsExtractorFactory
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
+class MainActivity : AppCompatActivity() {
 
-
-class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionListener {
+    val titleMap = mapOf(
+        HomeFragment::class to R.string.fragment_home_title,
+        StatsMainFragment::class to R.string.fragment_stats_title,
+        MediaFragment::class to R.string.fragment_media_title,
+        MainStandingsFragment::class to R.string.fragment_standings_title
+    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +42,7 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
 
     private fun setupHamburger() {
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        actionBar?.title = getString(R.string.app_name)
+        supportActionBar?.title = getString(R.string.app_name)
 
 
         val drawerToggle:ActionBarDrawerToggle = object : ActionBarDrawerToggle(
@@ -85,16 +75,13 @@ class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionList
 
     private fun changeFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+        supportActionBar?.title = getString(titleMap.getValue(fragment::class))
     }
 
 
     // Extension function to show toast message easily
     private fun Context.toast(message:String){
         Toast.makeText(applicationContext,message,Toast.LENGTH_SHORT).show()
-    }
-
-    override fun gameFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

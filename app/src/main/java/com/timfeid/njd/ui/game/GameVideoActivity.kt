@@ -1,12 +1,12 @@
 package com.timfeid.njd.ui.game
 
 import android.app.MediaRouteActionProvider
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.webkit.JavascriptInterface
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.cast.CastPlayer
@@ -44,7 +44,7 @@ import com.google.android.gms.cast.framework.IntroductoryOverlay
 class GameVideoActivity : AppCompatActivity() {
 
     private lateinit var castPlayer: CastPlayer
-    var player: SimpleExoPlayer? = null
+    private lateinit var player: SimpleExoPlayer
     private lateinit var game: Game
     private lateinit var trickyUrl: String
     private lateinit var mediaRouteMenuItem: MenuItem
@@ -65,6 +65,8 @@ class GameVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_video)
 
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         game = intent.extras!!["game"] as Game
         val mediaId = intent.extras!!["playbackId"] as String
 
@@ -83,11 +85,9 @@ class GameVideoActivity : AppCompatActivity() {
         }
 
         CastContext.getSharedInstance(this)
-
-
     }
 
-    fun setupPlayer (url: String) {
+    private fun setupPlayer (url: String) {
         trickyUrl = "https://wolf.timfeid.com/ha.m3u8?url="+URLEncoder.encode(url, "UTF-8")
         Log.d("TRICK URL", Uri.parse(trickyUrl).toString())
         val defaultHlsExtractorFactory = DefaultHlsExtractorFactory(
@@ -99,12 +99,10 @@ class GameVideoActivity : AppCompatActivity() {
             .createMediaSource(Uri.parse(trickyUrl))
 
         player = SimpleExoPlayer.Builder(this).build()
-
-
+        player.playWhenReady = true
+        player.prepare(hlsMediaSource)
 
         player_view.player = player
-
-        player!!.prepare(hlsMediaSource)
 
         castPlayer = CastPlayer(CastContext.getSharedInstance(this))
         castPlayer.setSessionAvailabilityListener(object : SessionAvailabilityListener {
@@ -130,10 +128,27 @@ class GameVideoActivity : AppCompatActivity() {
         return MediaQueueItem.Builder(mediaInfo).build()
     }
 
-    override fun onDestroy() {
-        if (player != null) {
-            player!!.release()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        checkOrientation(newConfig)
+        super.onConfigurationChanged(newConfig)
+    }
+
+    fun checkOrientation(newConfig: Configuration) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+            supportActionBar!!.hide()
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            supportActionBar!!.show()
         }
+    }
+
+    override fun onDestroy() {
+        player.release()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         return super.onDestroy()
     }

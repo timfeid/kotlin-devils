@@ -20,6 +20,7 @@
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/player_view"
+        android:background="@color/black"
         android:layout_width="match_parent"
-        android:layout_height="240dp" />
+        android:layout_height="match_parent" />
 </LinearLayout>

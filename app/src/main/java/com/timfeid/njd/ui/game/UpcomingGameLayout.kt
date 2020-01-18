@@ -4,10 +4,8 @@ import com.timfeid.njd.api.schedule.Game
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.R
 
 
@@ -72,7 +70,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
             for (i in 0..5) {
                 val layout = layoutInflater.inflate(
-                    R.layout.top_scorer_box,
+                    if (team == "home") { R.layout.top_scorer_box_home } else { R.layout.top_scorer_box_away },
                     topScorersLayout,
                     false
                 ) as LinearLayout

@@ -9,10 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/transparentBlack"
+            />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="160dp">
+            android:layout_height="wrap_content"
+            android:background="@color/transparentBlack"
+            >
             <com.timfeid.njd.ui.FontTextView
                 android:id="@+id/game_date"
                 android:layout_width="match_parent"
@@ -40,17 +46,19 @@
 
             <View
                 android:background="@color/transparentMax"
-                android:layout_width="2dp"
-                android:layout_height="140dp"
+                android:layout_width="1dp"
+                android:layout_height="110dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="58dp" />
+                android:layout_marginTop="58dp"
+                android:layout_marginBottom="30dp"/>
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:layout_marginTop="-210dp"
+            android:layout_marginTop="-225dp"
+            android:paddingBottom="9dp"
             android:weightSum="2"
             android:layout_weight="1">
             <LinearLayout
@@ -111,7 +119,7 @@
                 <View
                     android:background="@color/transparentMax"
                     android:layout_width="fill_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="5dp"/>
 
 
@@ -177,7 +185,7 @@
 
                 <View
                     android:layout_width="fill_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@color/transparentMax" />
@@ -188,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
                     android:layout_gravity="end"
-                    android:text="BROADCASTS"
+                    android:text="something that takes up two lines"
                     android:textColor="#fff"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"
@@ -204,14 +212,12 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:padding="15dp"
-            android:layout_marginTop="20dp"
-            android:background="#75000000"
+            android:background="@color/transparentBlack"
             android:orientation="vertical">
             <com.timfeid.njd.ui.BoldFontTextView
                 android:text="@string/top_scorers"
-                android:textColor="@color/transparentIsh"
+                android:textColor="@color/transparentMax"
                 android:textAllCaps="true"
-                android:textSize="18dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
             <LinearLayout

@@ -11,6 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@mipmap/ic_launcher"
+        android:layout_marginEnd="5dp"
         android:contentDescription="TODO" />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,10 +23,12 @@
             android:id="@+id/top_scorer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:text="Hello WOrld"
+            android:textSize="12sp"
             android:textColor="@color/colorAccent"/>
         <TextView
             android:id="@+id/top_scorer_info"
+            android:text="RW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
@@ -38,12 +41,14 @@
         android:layout_marginEnd="15dp"
         android:orientation="vertical">
         <TextView
+            android:text="5G"
             android:id="@+id/top_scorer_goals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="@color/transparentIsh"/>
         <TextView
+            android:text="3A"
             android:id="@+id/top_scorer_assists"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
