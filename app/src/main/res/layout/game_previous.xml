@@ -122,15 +122,17 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"/>
 
-                <TextView
+                <com.timfeid.njd.ui.BoldFontTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:includeFontPadding="false"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_gravity="start"
                     android:textColor="#fff"
                     android:textAlignment="viewStart"
                     android:textAllCaps="true"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:tag="HOME_TEAM_SCORE"/>
 
@@ -204,15 +206,16 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/transparentMax" />
 
-                <TextView
+                <com.timfeid.njd.ui.BoldFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
                     android:layout_gravity="end"
+                    android:layout_marginTop="-5dp"
                     android:textColor="#fff"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:tag="AWAY_TEAM_SCORE"/>
 
@@ -230,9 +233,9 @@
             android:layout_marginBottom="1dp"
             android:background="@color/transparentBlack">
             <com.timfeid.njd.ui.BoldFontButton
+                android:layout_height="40dp"
                 android:id="@+id/videoInfo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_play_circle_outline_black_20dp"
                 android:drawableTint="@color/transparentIsh"
                 android:background="#00000000"
@@ -297,9 +300,9 @@
                 android:layout_height="wrap_content"
                 android:stretchColumns="1">
                 <TableRow>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:layout_span="2"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:id="@+id/period_1_name"
                         android:text="@string/period_1_name"
                         android:paddingHorizontal="10dp"
@@ -307,7 +310,7 @@
                         android:textColor="@color/colorAccent"
                         android:textAllCaps="true"
                         android:textAlignment="center"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:id="@+id/period_2_name"
                         android:text="@string/period_2_name"
                         android:paddingHorizontal="10dp"
@@ -315,7 +318,7 @@
                         android:textColor="@color/colorAccent"
                         android:textAllCaps="true"
                         android:textAlignment="center" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:id="@+id/period_3_name"
                         android:text="@string/period_3_name"
                         android:paddingHorizontal="10dp"
@@ -323,7 +326,7 @@
                         android:textColor="@color/colorAccent"
                         android:textAllCaps="true"
                         android:textAlignment="center" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:id="@+id/period_4_name"
                         android:text="@string/period_4_name"
                         android:paddingHorizontal="10dp"
@@ -332,7 +335,7 @@
                         android:textAllCaps="true"
                         android:textAlignment="center"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:id="@+id/period_so_name"
                         android:text="@string/period_so_name"
                         android:paddingHorizontal="10dp"
@@ -341,7 +344,7 @@
                         android:textAllCaps="true"
                         android:textAlignment="center"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.BoldFontTextView
                         android:text="@string/final_score_name"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="3sp"
@@ -362,7 +365,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <TextView
+                        <com.timfeid.njd.ui.BoldFontTextView
                             android:text="Home Team"
                             android:textStyle="bold"
                             android:padding="3dip"
@@ -370,9 +373,9 @@
                             android:tag="HOME_TEAM_NAME"
                             android:textAllCaps="true"
                             android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
+                            android:layout_height="24dp"
                             android:layout_width="wrap_content" />
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/home_team_sog"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -383,28 +386,28 @@
                             android:textColor="@color/transparentIsh"/>
 
                     </LinearLayout>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
                         android:id="@+id/home_team_p1_score"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
                         android:id="@+id/home_team_p2_score" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textColor="@color/colorAccent"
                         android:textAlignment="center"
                         android:id="@+id/home_team_p3_score" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -412,7 +415,7 @@
                         android:textAlignment="center"
                         android:id="@+id/home_team_p4_score"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -420,7 +423,7 @@
                         android:textAlignment="center"
                         android:id="@+id/home_team_so_score"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.BoldFontTextView
                         android:text="0"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -441,7 +444,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <TextView
+                        <com.timfeid.njd.ui.BoldFontTextView
                             android:text="Away Team"
                             android:textStyle="bold"
                             android:padding="3dip"
@@ -449,9 +452,9 @@
                             android:tag="AWAY_TEAM_NAME"
                             android:textAllCaps="true"
                             android:textColor="@color/colorAccent"
-                            android:layout_height="20dp"
+                            android:layout_height="24dp"
                             android:layout_width="wrap_content" />
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/away_team_sog"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -462,28 +465,28 @@
                             android:textSize="12sp"/>
 
                     </LinearLayout>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textColor="@color/colorAccent"
                         android:textAlignment="center"
                         android:id="@+id/away_team_p1_score"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textColor="@color/colorAccent"
                         android:textAlignment="center"
                         android:id="@+id/away_team_p2_score" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
                         android:textColor="@color/colorAccent"
                         android:textAlignment="center"
                         android:id="@+id/away_team_p3_score" />
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -491,7 +494,7 @@
                         android:textAlignment="center"
                         android:id="@+id/away_team_p4_score"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.FontTextView
                         android:text="@string/dash"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -499,7 +502,7 @@
                         android:textAlignment="center"
                         android:id="@+id/away_team_so_score"
                         android:visibility="gone"/>
-                    <TextView
+                    <com.timfeid.njd.ui.BoldFontTextView
                         android:text="0"
                         android:textSize="20sp"
                         android:padding="3dip"
@@ -550,17 +553,16 @@
                 android:textAllCaps="true"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
-            <LinearLayout
+            <RelativeLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
-                android:layout_marginTop="15dp"
-                android:weightSum="3">
+                android:layout_marginTop="15dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentStart="true"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -571,19 +573,20 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="8dp"
                         android:orientation="vertical"
                         android:layout_gravity="center">
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/first_star_name"
                             android:layout_width="match_parent"
                             android:includeFontPadding="false"
                             android:layout_height="match_parent"
+                            android:maxLines="1"
                             android:text="Some Player"
                             android:textColor="@color/colorAccent"
                             android:textStyle="bold"
                             android:textSize="12sp"/>
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/first_star_stats"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -598,7 +601,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_centerInParent="true"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -610,18 +613,19 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="8dp"
                         android:orientation="vertical">
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/second_star_name"
                             android:layout_width="match_parent"
                             android:includeFontPadding="false"
                             android:layout_height="match_parent"
+                            android:maxLines="1"
                             android:text="Some Player"
                             android:textColor="@color/colorAccent"
                             android:textStyle="bold"
                             android:textSize="12sp"/>
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/second_star_stats"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -636,7 +640,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentEnd="true"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -647,19 +651,20 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="8dp"
                         android:layout_gravity="center"
                         android:orientation="vertical">
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/third_star_name"
                             android:layout_width="match_parent"
+                            android:maxLines="1"
                             android:layout_height="match_parent"
                             android:text="Some Player"
                             android:textColor="@color/colorAccent"
                             android:includeFontPadding="false"
                             android:textStyle="bold"
                             android:textSize="12sp"/>
-                        <TextView
+                        <com.timfeid.njd.ui.FontTextView
                             android:id="@+id/third_star_stats"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -671,7 +676,7 @@
                     </LinearLayout>
 
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
         <LinearLayout

@@ -24,5 +24,6 @@ data class Team(
     val shortName: String? = null,
     val teamName: String? = null,
     val venue: Venue? = null,
+    val teamStats: List<TeamStats> = listOf(),
     val roster: Roster? = null
 ) : Parcelable

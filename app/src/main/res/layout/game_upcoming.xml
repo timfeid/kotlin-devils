@@ -215,32 +215,36 @@
             android:background="@color/transparentBlack"
             android:orientation="vertical">
             <com.timfeid.njd.ui.BoldFontTextView
-                android:text="@string/top_scorers"
+                android:text="@string/scoring_leaders"
                 android:textColor="@color/transparentMax"
                 android:textAllCaps="true"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
             <LinearLayout
+                android:id="@+id/scoring_leaders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-                <LinearLayout
-                    android:id="@+id/top_home_scorers_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                android:orientation="vertical">
+            </LinearLayout>
+        </LinearLayout>
 
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/top_away_scorers_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="15dp"
+            android:background="@color/transparentBlack"
+            android:orientation="vertical">
+            <com.timfeid.njd.ui.BoldFontTextView
+                android:text="@string/team_stats"
+                android:textColor="@color/transparentMax"
+                android:textAllCaps="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+            <LinearLayout
+                android:id="@+id/team_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

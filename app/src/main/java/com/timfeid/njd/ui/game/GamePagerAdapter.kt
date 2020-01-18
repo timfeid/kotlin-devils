@@ -53,7 +53,9 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
         url.addParam("startDate", format.format(startDate.getTime()))
         url.addParam("endDate", format.format(endDate.getTime()))
-        url.addParam("hydrate", String.format("team(leaders,roster(season=%s,person(name,stats(splits=[statsSingleSeason,statsSingleSeasonPlayoffs])))),linescore,broadcasts(all),tickets,game(content(media(epg),highlights(scoreboard)),seriesSummary),radioBroadcasts,metadata,decisions,boxscore,scoringplays,seriesSummary(series)",
+        url.addParam("hydrate", String.format("team(leaders,stats(splits=statsSingleSeason,season=%s),roster(season=%s,person(name,stats(splits=[statsSingleSeason,statsSingleSeasonPlayoffs,season=%s])))),linescore,broadcasts(all),tickets,game(content(media(epg),highlights(scoreboard)),seriesSummary),radioBroadcasts,metadata,decisions,boxscore,scoringplays,seriesSummary(series)",
+            BuildConfig.API_SEASON,
+            BuildConfig.API_SEASON,
             BuildConfig.API_SEASON
         ))
         url.addParam("teamId", BuildConfig.API_TEAM_ID)

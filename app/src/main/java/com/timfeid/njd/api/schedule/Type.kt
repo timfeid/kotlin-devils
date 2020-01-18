@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Type(
-    val displayName: String
+    val displayName: String = ""
 ) : Parcelable

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class Stat(
-    val type: Type = Type(),
-    val splits: List<Split>? = null
+data class TeamSplit(
+    val stat: TeamStat = TeamStat(),
+    val team: Team = Team()
 ) : Parcelable

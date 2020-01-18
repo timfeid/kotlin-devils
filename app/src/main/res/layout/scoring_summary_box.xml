@@ -9,32 +9,24 @@
         android:id="@+id/scoring_summary_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@mipmap/ic_launcher" />
-    <ImageButton
         android:layout_gravity="center"
-        android:layout_marginStart="3dp"
-        android:id="@+id/view_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_play_circle_outline_black_24dp"
-        android:background="#00000000"
-        android:contentDescription="TODO" />
+        android:src="@mipmap/ic_launcher" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
         android:layout_gravity="center"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <TextView
+            <com.timfeid.njd.ui.BoldFontTextView
                 android:id="@+id/scoring_summary_scorer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/colorAccent"/>
-            <TextView
+            <com.timfeid.njd.ui.FontTextView
                 android:id="@+id/scoring_summary_strength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,10 +34,11 @@
                 android:textColor="@color/transparentIsh"/>
         </LinearLayout>
 
-        <TextView
+        <com.timfeid.njd.ui.FontTextView
             android:id="@+id/scoring_summary_assists"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
             android:textSize="12sp"
             android:textColor="@color/transparentIsh" />
     </LinearLayout>
@@ -53,31 +46,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-        <TextView
-            android:id="@+id/scoring_summary_score"
-            android:layout_width="wrap_content"
-            android:includeFontPadding="false"
-            android:textAllCaps="true"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/transparentIsh"/>
-        <TextView
-            android:id="@+id/scoring_summary_time"
+        android:gravity="center|end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_gravity="center"
+            android:layout_marginStart="3dp"
+            android:id="@+id/view_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:textAllCaps="true"
-            android:textSize="12sp"
-            android:textColor="@color/transparentIsh"/>
-        <TextView
-            android:id="@+id/scoring_summary_type"
-            android:layout_width="wrap_content"
+            android:src="@drawable/ic_play_circle_outline_black_24dp"
+            android:background="#00000000"
+            android:tint="@color/transparentBlack"
+            android:contentDescription="TODO" />
+
+        <LinearLayout
+            android:layout_width="75dp"
+            android:layout_gravity="end"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:textAllCaps="true"
-            android:textSize="12sp"
-            android:textColor="@color/transparentIsh"/>
+            android:orientation="vertical">
+            <com.timfeid.njd.ui.FontTextView
+                android:id="@+id/scoring_summary_score"
+                android:layout_width="wrap_content"
+                android:layout_gravity="end"
+                android:includeFontPadding="false"
+                android:textAllCaps="true"
+                android:textAlignment="textEnd"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/transparentIsh"/>
+            <com.timfeid.njd.ui.FontTextView
+                android:textAlignment="textEnd"
+                android:id="@+id/scoring_summary_time"
+                android:layout_width="wrap_content"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:textColor="@color/transparentIsh"/>
+            <com.timfeid.njd.ui.FontTextView
+                android:textAlignment="textEnd"
+                android:id="@+id/scoring_summary_type"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:textColor="@color/transparentIsh"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
