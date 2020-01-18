@@ -70,6 +70,7 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         if (schedule != null) {
             for (date in schedule!!.dates) {
                 for (game in date.games) {
+                    game.date = date.date
                     games.add(game)
                 }
             }

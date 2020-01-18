@@ -1,10 +1,13 @@
 package com.timfeid.njd.api.common
 
 
+import android.os.Parcelable
 import com.timfeid.njd.api.schedule.*
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Parcelize
 data class Team(
     val abbreviation: String? = null,
     val active: Boolean? = null,
@@ -22,4 +25,4 @@ data class Team(
     val teamName: String? = null,
     val venue: Venue? = null,
     val roster: Roster? = null
-)
+) : Parcelable

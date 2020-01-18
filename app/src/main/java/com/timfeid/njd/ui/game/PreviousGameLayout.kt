@@ -1,29 +1,28 @@
 package com.timfeid.njd.ui.game
 
+import android.annotation.SuppressLint
 import com.timfeid.njd.api.schedule.Game
-import android.widget.TextView
 import android.app.Activity
 import android.util.ArrayMap
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.timfeid.njd.R
 import com.timfeid.njd.api.schedule.Player
 import java.util.*
-import android.widget.ImageButton
 import com.timfeid.njd.api.content.Item
 import android.content.Intent
 import com.timfeid.njd.ui.game.BoxscoreLayout
 import android.net.Uri
+import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.content.Content
+import com.timfeid.njd.api.schedule.Content
 import com.timfeid.njd.api.live.Live
 import com.timfeid.njd.api.schedule.Status
 import com.timfeid.njd.api.schedule.Strength
+import com.timfeid.njd.ui.BoldFontButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,11 +67,46 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
             fillBoxscore()
             fillScoringSummary()
             populateDateAndTime()
+            watchButton()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun watchButton () {
+        if (content != null && content!!.media != null && content!!.media!!.epg.count() > 0) {
+            val nhlTv = content!!.media!!.epg.find { it.title == "NHLTV" }
+            if (nhlTv != null) {
+                var feed = nhlTv.items.find {
+                    it.mediaFeedType == if (game.isHome()) { "HOME" } else { "AWAY" }
+                }
+
+                if (feed == null) {
+                    feed = nhlTv.items.find {
+                        it.mediaFeedType == "NATIONAL"
+                    }
+                }
+
+                if (feed != null) {
+                    Log.d("t", feed.mediaPlaybackId)
+
+                    val watchGame = rootView.findViewById<BoldFontButton>(R.id.videoInfo)
+                    val teaser = if (feed.mediaState == "MEDIA_ARCHIVE") { "Watch archive" } else { "Watch Live" }
+                    watchGame.text = "${teaser} (${feed.callLetters})"
+                    watchGame.setOnClickListener { v ->
+                        val intent = Intent(v.context, GameVideoActivity::class.java)
+                        intent.putExtra("game", game)
+                        intent.putExtra("playbackId", feed.mediaPlaybackId)
+                        v.context.startActivity(intent)
+                    }
+                }
+            }
         }
     }
 
     override fun initView() {
         createBoxscore()
+
+
     }
 
     protected fun createBoxscore() {
@@ -316,6 +350,8 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         val unparsed = URL(url.get()).readText()
 
         content = json.parse(Content.serializer(), unparsed)
+
+
 
         return content
     }

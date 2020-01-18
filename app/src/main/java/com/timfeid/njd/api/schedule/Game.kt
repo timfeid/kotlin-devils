@@ -1,12 +1,16 @@
 package com.timfeid.njd.api.schedule
 
 
+import android.os.Parcelable
+import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.api.common.Play
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
 import java.util.*
 
 @Serializable
+@Parcelize
 data class Game(
     val content: Content,
     val gameDate: String,
@@ -21,8 +25,9 @@ data class Game(
     val radioBroadcasts: List<RadioBroadcast> = ArrayList(),
     val broadcasts: List<Broadcast> = ArrayList(),
     val decisions: Decisions? = null,
-    val scoringPlays: List<Play>
-) : java.io.Serializable {
+    val scoringPlays: List<Play>,
+    var date: String = ""
+) : Parcelable {
 
     companion object {
 
@@ -30,6 +35,9 @@ data class Game(
         val PLAYER_TYPE_ASSIST = "Assist"
     }
 
+    fun isHome (): Boolean {
+        return this.teams.home.team.id.toString() == BuildConfig.API_TEAM_ID
+    }
 
     fun findPlayerById(id: Int): Player? {
         for (player in teams.home.team.roster!!.roster) {

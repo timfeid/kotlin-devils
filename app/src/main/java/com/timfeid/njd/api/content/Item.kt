@@ -1,12 +1,15 @@
 package com.timfeid.njd.api.content
 
 
+import android.os.Parcelable
 import android.util.ArrayMap
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 
 @Serializable
+@Parcelize
 data class Item(
     val approval: String = "",
     val commenting: Boolean = false,
@@ -31,7 +34,7 @@ data class Item(
     val type: String = "",
     val url: String = "",
     val playbacks: List<Playback> = listOf()
-) {
+) : Parcelable {
     fun getMobileUrl(): String? {
         for (playback in playbacks) {
             if (playback.name == Playback.MOBILE) {

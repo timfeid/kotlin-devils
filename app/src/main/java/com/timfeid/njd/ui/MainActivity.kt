@@ -15,6 +15,23 @@ import com.timfeid.njd.ui.standing.MainStandingsFragment
 import com.timfeid.njd.ui.stat.StatsMainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.hamburger.*
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.util.Util.getUserAgent
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.EventLogger
+import kotlinx.android.synthetic.main.standings_header.*
+import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES
+import com.google.android.exoplayer2.source.hls.DefaultHlsExtractorFactory
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
 
 class MainActivity : AppCompatActivity(), GameFragment.OnFragmentInteractionListener {
 

@@ -1,9 +1,12 @@
 package com.timfeid.njd.api.schedule
 
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Parcelize
 data class About(
     val dateTime: String,
     val eventId: Int,
@@ -14,4 +17,4 @@ data class About(
     val periodTime: String,
     val periodTimeRemaining: String,
     val periodType: String
-)
+) : Parcelable

@@ -21,7 +21,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
     var team = "home"
 
     override fun initView() {
-        team = if (game.teams.home.team.id.toString() == BuildConfig.API_TEAM_ID) { "home" } else { "away" }
+        team = if (game.isHome()) { "home" } else { "away" }
     }
 
     override fun fill() {

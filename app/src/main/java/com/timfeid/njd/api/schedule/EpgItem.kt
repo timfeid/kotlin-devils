@@ -1,8 +1,11 @@
 package com.timfeid.njd.api.schedule
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Parcelize
 data class EpgItem(
     var guid: String? = null,
     var mediaState: String,
@@ -14,4 +17,4 @@ data class EpgItem(
     var freeGame: Boolean = false,
     var feedName: String? = null,
     var gamePlus: Boolean = false
-)
+) : Parcelable
