@@ -14,9 +14,11 @@ import com.timfeid.njd.api.content.Item
 import android.content.Intent
 import com.timfeid.njd.ui.game.BoxscoreLayout
 import android.net.Uri
+import android.os.Handler
 import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.marginBottom
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.schedule.Content
 import com.timfeid.njd.api.live.Live
@@ -30,6 +32,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.io.File
 import java.net.URL
+import kotlin.concurrent.timer
 
 
 internal open class PreviousGameLayout(game: Game, rootView: View, activity: Activity) :
@@ -38,13 +41,9 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            fetchGame()
-            fetchContent()
-            CoroutineScope(Dispatchers.Main).launch {
-                fill()
-            }
-        }
+        fetchGame()
+        fetchContent()
+        fill()
     }
 
     protected var boxscores: ArrayMap<Int, BoxscoreLayout> = ArrayMap()
@@ -113,20 +112,11 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         val boxscore = rootView.findViewById(R.id.boxscore) as LinearLayout
         rootView.findViewById<LinearLayout>(R.id.boxscore_box).visibility = View.VISIBLE
 
-        var line = View(activity)
         for (statResource in boxscoreStats) {
             val stat = BoxscoreLayout(activity, resources.getString(statResource))
-            boxscores.put(statResource, stat)
-            line = View(activity)
-            line.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparentMax))
-            line.minimumHeight = 2
+            boxscores[statResource] = stat
             boxscore.addView(stat)
-            boxscore.addView(line)
-            val params = line.layoutParams as LinearLayout.LayoutParams
-            params.setMargins(0, 10, 0, 10)
-            line.layoutParams = line.layoutParams
         }
-        boxscore.removeView(line)
     }
 
     override val layoutId: Int
@@ -176,6 +166,7 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
         for (entry in boxscores.entries) {
             val layout = entry.value
+            layout.teamIsHome(game.isHome())
             when (entry.key) {
                 R.string.shots -> {
                     layout.setHome(homeTeamStats.shots.toString())
@@ -216,10 +207,11 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
     fun fillScoringSummary() {
         if (liveGame != null) {
 
-            val scoringSummaryLayout: LinearLayout =
-                rootView.findViewById(R.id.scoring_summary_layout)
+            val scoringSummaryLayout: LinearLayout = rootView.findViewById(R.id.scoring_summary_layout)
             val plays = liveGame!!.liveData.plays.getScoringPlays()
+
             scoringSummaryLayout.removeAllViews()
+            scoringSummaryLayout.visibility = if (plays.count() == 0) { View.GONE } else { View.VISIBLE }
 
             for (play in plays) {
                 val layout = layoutInflater.inflate(
@@ -333,26 +325,50 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         }
     }
 
-    fun fetchGame(): Live? {
-        val url = UrlMaker("game/${game.gamePk}/feed/live")
+    fun fetchGame() {
+        Log.d("m3", "getting live game")
+        CoroutineScope(Dispatchers.IO).launch {
 
-        val json = Json(JsonConfiguration(strictMode = false))
-        val unparsed = URL(url.get()).readText()
+            val url = UrlMaker("game/${game.gamePk}/feed/live")
 
-        liveGame = json.parse(Live.serializer(), unparsed)
+            val json = Json(JsonConfiguration(strictMode = false))
+            val unparsed = URL(url.get()).readText()
 
-        return liveGame
+            CoroutineScope(Dispatchers.Main).launch {
+                liveGame = json.parse(Live.serializer(), unparsed)
+                fill()
+
+                if (liveGame != null && liveGame!!.gameData.status.isLive()) {
+                    Log.d("m3", "setting timer")
+                    Handler().postDelayed({
+                        fetchGame()
+                    }, (liveGame!!.metaData.wait * 1000).toLong())
+                } else {
+                    Log.d("m3", "NO TIMER SET" + (liveGame != null).toString())
+                }
+            }
+
+        }
+
     }
 
-    fun fetchContent(): Content? {
-        val url = UrlMaker("game/${game.gamePk}/content")
-        val json = Json(JsonConfiguration(strictMode = false))
-        val unparsed = URL(url.get()).readText()
-
-        content = json.parse(Content.serializer(), unparsed)
-
+    fun fetchContent() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val url = UrlMaker("game/${game.gamePk}/content")
+            val json = Json(JsonConfiguration(strictMode = false))
+            val unparsed = URL(url.get()).readText()
 
 
-        return content
+            CoroutineScope(Dispatchers.Main).launch {
+                content = json.parse(Content.serializer(), unparsed)
+
+                if (liveGame == null || liveGame!!.gameData.status.isLive()) {
+                    Log.d("m3", "setting content timer")
+                    Handler().postDelayed({
+                        fetchContent()
+                    }, (30000).toLong())
+                }
+            }
+        }
     }
 }

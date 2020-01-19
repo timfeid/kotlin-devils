@@ -2,6 +2,7 @@ package com.timfeid.njd.api.schedule
 
 
 import android.os.Parcelable
+import android.util.Log
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -33,5 +34,10 @@ data class Status(
         }
 
         return false
+    }
+
+    fun isLive(): Boolean {
+        Log.d("m3", isFinal().toString() + " ? " + isScheduled().toString())
+        return !isFinal() && !isScheduled()
     }
 }

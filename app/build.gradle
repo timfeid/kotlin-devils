@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'API_URL', '"https://statsapi.web.nhl.com/api/v1/"'
-        buildConfigField 'String', 'API_TEAM_ID', '"5"'
+        buildConfigField 'String', 'API_TEAM_ID', '"1"'
         buildConfigField 'String', 'API_SEASON', '"20192020"'
     }
     buildTypes {
