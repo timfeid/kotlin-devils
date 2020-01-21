@@ -42,6 +42,11 @@
     <string name="fragment_standings_title">Standings</string>
     <string name="scoring_leaders">Last 5 Games</string>
     <string name="team_stats">Team Stats</string>
+    <string name="goalie_watch_header">Goalie Watch</string>
+    <string name="shootout_abbr">SO</string>
+    <string name="save_percentage_abbr">SV%</string>
+    <string name="goals_against_avg_abbr">GAA</string>
+    <string name="record">Record</string>
 
     <string-array name="skaters_sort">
         <item>Points</item>

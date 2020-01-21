@@ -24,6 +24,8 @@ class BoxscoreLayout(context: Context, protected val string: String) : LinearLay
     internal var bar: LinearLayout = LinearLayout(context)
     internal var homeBar: LinearLayout = LinearLayout(context)
     internal var awayBar: LinearLayout = LinearLayout(context)
+    var homeValue: Float? = null
+    var awayValue: Float? = null
     val white = ContextCompat.getColor(getContext(), R.color.colorAccent)
     val color = ContextCompat.getColor(getContext(), R.color.colorPrimary)
     val transparent = ContextCompat.getColor(getContext(), R.color.transparentIsh)
@@ -92,6 +94,16 @@ class BoxscoreLayout(context: Context, protected val string: String) : LinearLay
         resetBars()
     }
 
+    fun setHomeValue (value: Float) {
+        homeValue = value
+        resetBars()
+    }
+
+    fun setAwayValue (value: Float) {
+        awayValue = value
+        resetBars()
+    }
+
     fun teamIsHome (home: Boolean) {
 
         homeBar.setBackgroundColor(if (home) {
@@ -108,8 +120,8 @@ class BoxscoreLayout(context: Context, protected val string: String) : LinearLay
     }
 
     fun resetBars() {
-        val homev = home.text.toString().toFloatOrNull() ?: 0f
-        val awayv = away.text.toString().toFloatOrNull() ?: 0f
+        val homev = homeValue ?: home.text.toString().toFloatOrNull() ?: 0f
+        val awayv = awayValue ?: away.text.toString().toFloatOrNull() ?: 0f
 
         bar.weightSum = homev + awayv
 

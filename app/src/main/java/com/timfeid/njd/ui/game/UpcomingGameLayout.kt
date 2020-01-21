@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.timfeid.njd.R
+import com.timfeid.njd.ui.FontTextView
 
 
 internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity) :
@@ -35,6 +36,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         val broadcastInfo = rootView.findViewById<TextView>(R.id.broadcastInfo)
         broadcastInfo.text = getBroadcastInfo() + getRadioBroadcastInfo()
         populateTeamStats()
+        populateGoalieStats()
     }
 
 
@@ -255,5 +257,87 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
             teamStatsLayout.addView(layout)
         }
+    }
+
+    fun createStat (title: String): BoxscoreLayout {
+        val s = BoxscoreLayout(activity, title)
+        s.teamIsHome(game.isHome())
+
+        return s
+    }
+
+    fun populateGoalieStats () {
+        val goalieStats = rootView.findViewById(R.id.goalie_stats) as LinearLayout
+
+
+        val homeGoalies = game.teams.home.team.roster!!.roster.filter { it.position.code == "G" }.sortedByDescending {
+            it.findCurrentStats().gamesStarted
+        }
+        val awayGoalies = game.teams.away.team.roster!!.roster.filter { it.position.code == "G" }.sortedByDescending {
+            it.findCurrentStats().gamesStarted
+        }
+
+        Log.d("away goalies", awayGoalies.toString())
+
+        for ((index, goalie) in homeGoalies.withIndex()) {
+            if (awayGoalies.getOrNull(index) != null) {
+                val homeStats = goalie.findCurrentStats()
+                val awayStats = awayGoalies[index].findCurrentStats()
+
+                val layout = layoutInflater.inflate(
+                    R.layout.goalie_stats_row,
+                    goalieStats,
+                    false
+                ) as LinearLayout
+
+                val awayImage = layout.findViewById<ImageView>(R.id.away_image)
+                val homeImage = layout.findViewById<ImageView>(R.id.home_image)
+
+                val awayName = layout.findViewById<FontTextView>(R.id.away_name)
+                val homeName = layout.findViewById<FontTextView>(R.id.home_name)
+
+                val awayNumber = layout.findViewById<FontTextView>(R.id.away_number)
+                val homeNumber = layout.findViewById<FontTextView>(R.id.home_number)
+
+                val awayRecord = layout.findViewById<FontTextView>(R.id.away_stat_record)
+                val homeRecord = layout.findViewById<FontTextView>(R.id.home_stat_record)
+
+                val awayGaa = layout.findViewById<FontTextView>(R.id.away_stat_gaa)
+                val homeGaa = layout.findViewById<FontTextView>(R.id.home_stat_gaa)
+
+                val awaySvp = layout.findViewById<FontTextView>(R.id.away_stat_svp)
+                val homeSvp = layout.findViewById<FontTextView>(R.id.home_stat_svp)
+
+                val awaySo = layout.findViewById<FontTextView>(R.id.away_stat_so)
+                val homeSo = layout.findViewById<FontTextView>(R.id.home_stat_so)
+
+                imageCircleUrl(awayImage, awayGoalies[index].person.getImageUrl())
+                imageCircleUrl(homeImage, goalie.person.getImageUrl())
+
+                awayName.text = awayGoalies[index].person.shortName()
+                homeName.text = goalie.person.shortName()
+
+                awayNumber.text = "#${awayGoalies[index].person.primaryNumber}"
+                homeNumber.text = "#${goalie.person.primaryNumber}"
+
+                awayRecord.text = "${awayStats.wins}-${awayStats.losses}-${awayStats.ot}"
+                homeRecord.text = "${homeStats.wins}-${homeStats.losses}-${homeStats.ot}"
+
+                awayGaa.text = awayStats.goalAgainstAverage.toString().substring(0, 4)
+                homeGaa.text = homeStats.goalAgainstAverage.toString().substring(0, 4)
+
+                awaySvp.text = awayStats.savePercentage.toString()
+                homeSvp.text = homeStats.savePercentage.toString()
+
+                awaySo.text = awayStats.shutouts.toString()
+                homeSo.text = homeStats.shutouts.toString()
+
+                goalieStats.addView(layout)
+
+            }
+
+        }
+
+
     }
 }

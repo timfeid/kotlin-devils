@@ -247,5 +247,25 @@
                 android:orientation="vertical">
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="15dp"
+            android:background="@color/transparentBlack"
+            android:orientation="vertical">
+            <com.timfeid.njd.ui.BoldFontTextView
+                android:text="@string/goalie_watch_header"
+                android:textColor="@color/transparentMax"
+                android:textAllCaps="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+            <LinearLayout
+                android:id="@+id/goalie_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
