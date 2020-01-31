@@ -199,8 +199,8 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 "power play %" -> homeValueStats.powerPlayPercentage
                 "penalty kill %" -> homeValueStats.penaltyKillPercentage
                 "faceoff %" -> homeValueStats.faceOffWinPercentage
-                "GF/GP" -> homeValueStats.goalsPerGame.substring(0, 4)
-                "GA/GP" -> homeValueStats.goalsAgainstPerGame.substring(0, 4)
+                "GF/GP" -> String.format("%.2f", homeValueStats.goalsPerGame.toFloat())
+                "GA/GP" -> String.format("%.2f", homeValueStats.goalsAgainstPerGame.toFloat())
                 else -> ""
             }
             val hp = when (i) {
@@ -216,8 +216,8 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 "power play %" -> awayValueStats.powerPlayPercentage
                 "penalty kill %" -> awayValueStats.penaltyKillPercentage
                 "faceoff %" -> awayValueStats.faceOffWinPercentage
-                "GF/GP" -> awayValueStats.goalsPerGame.substring(0, 4)
-                "GA/GP" -> awayValueStats.goalsAgainstPerGame.substring(0, 4)
+                "GF/GP" -> String.format("%.2f", awayValueStats.goalsPerGame.toFloat())
+                "GA/GP" -> String.format("%.2f", awayValueStats.goalsAgainstPerGame.toFloat())
                 else -> ""
             }
             val ap = when (i) {
