@@ -323,8 +323,11 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 awayRecord.text = "${awayStats.wins}-${awayStats.losses}-${awayStats.ot}"
                 homeRecord.text = "${homeStats.wins}-${homeStats.losses}-${homeStats.ot}"
 
-                awayGaa.text = awayStats.goalAgainstAverage.toString().substring(0, 4)
-                homeGaa.text = homeStats.goalAgainstAverage.toString().substring(0, 4)
+                val agaa = awayStats.goalAgainstAverage.toString()
+                val hgaa =  homeStats.goalAgainstAverage.toString()
+
+                awayGaa.text = agaa.substring(0, agaa.length.coerceAtMost(4))
+                homeGaa.text = hgaa.substring(0, hgaa.length.coerceAtMost(4))
 
                 awaySvp.text = awayStats.savePercentage.toString()
                 homeSvp.text = homeStats.savePercentage.toString()
