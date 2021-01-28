@@ -66,7 +66,7 @@ data class Doc(
 
     private fun fetchAsset(): Doc {
         val url = UrlMaker("web-v1.json")
-        url.baseUrl = "https://nhl.bamcontent.com/nhl/id/v1/$assetId/details/"
+        url.baseUrl = "https://cms.nhl.bamgrid.com/nhl/id/v1/$assetId/details/"
 
         val json = Json(JsonConfiguration(strictMode = false))
 
