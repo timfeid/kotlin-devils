@@ -213,7 +213,9 @@ internal abstract class GameLayout(
     }
 
     fun imageCircleUrl(imageView: ImageView, url: String) {
-        Picasso.get().load(url).transform(CircleTransform()).into(imageView)
+        val p = Picasso.get()
+        p.isLoggingEnabled = true
+        p.load(url).transform(CircleTransform()).into(imageView)
     }
 
 }

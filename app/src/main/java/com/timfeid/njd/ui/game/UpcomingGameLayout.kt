@@ -141,8 +141,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 }
                 homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv >= av) { R.color.white } else { R.color.transparentMax }))
                 homeInfo.text = "#${homePlayer.primaryNumber}, ${homePlayer.primaryPosition.abbreviation}"
-
-                imageCircleUrl(homePhoto, "https://nhl.bamcontent.com/images/headshots/current/60x60/${homePlayer.id}.png")
+                imageCircleUrl(homePhoto, "https://cms.nhl.bamgrid.com/images/headshots/current/60x60/${homePlayer.id}@2x.png")
 
                 awayScorer.text = awayPlayer.shortName
                 awayValue.text = when (i) {
@@ -152,7 +151,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (av >= hv) { R.color.white } else { R.color.transparentMax }))
                 awayInfo.text = "#${awayPlayer.primaryNumber}, ${awayPlayer.primaryPosition.abbreviation}"
 
-                imageCircleUrl(awayPhoto, "https://nhl.bamcontent.com/images/headshots/current/60x60/${awayPlayer.id}.png")
+                imageCircleUrl(awayPhoto, "https://cms.nhl.bamgrid.com/images/headshots/current/60x60/${awayPlayer.id}@2x.png")
 
                 leaderType.text = i
 
