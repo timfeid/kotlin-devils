@@ -1,6 +1,5 @@
 package com.timfeid.njd.ui
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,9 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.timfeid.njd.R
-import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.game.GamePagerAdapter
-import kotlinx.android.synthetic.main.fragment_schedule.*
+import kotlinx.android.synthetic.main.fragment_game_list.*
 
 class HomeFragment : Fragment() {
     private var rootView: View? = null
@@ -22,7 +20,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        rootView = inflater.inflate(R.layout.fragment_schedule, container, false)
+        rootView = inflater.inflate(R.layout.fragment_game_list, container, false)
 
         populate()
 

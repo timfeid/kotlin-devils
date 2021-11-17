@@ -52,7 +52,6 @@ internal abstract class GameLayout(
     private var awayTeamRecord: TextView? = null
     private var homeTeamCity: TextView? = null
     private var homeTeamRecord: TextView? = null
-    var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
     var activity: Activity
         protected set
 
@@ -92,12 +91,11 @@ internal abstract class GameLayout(
 
 
     protected open fun populateDateAndTime() {
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
         val gameDate: TextView = rootView.findViewById(R.id.game_date)
         val gameTime: TextView = rootView.findViewById(R.id.game_time)
 
-        var date = dateFormat.parse(game.gameDate)
+        var date = game.getDate()
 
         gameTime.setText(SimpleDateFormat("h:mm a", Locale.US).format(date))
         gameDate.setText(SimpleDateFormat("MMM d", Locale.US).format(date))

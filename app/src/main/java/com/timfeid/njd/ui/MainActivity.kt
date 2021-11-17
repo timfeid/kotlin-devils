@@ -1,7 +1,6 @@
 package com.timfeid.njd.ui
 
 import android.content.Context
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -9,8 +8,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.timfeid.njd.R
-import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.media.MediaFragment
+import com.timfeid.njd.ui.schedule.CalendarFragment
 import com.timfeid.njd.ui.standing.MainStandingsFragment
 import com.timfeid.njd.ui.stat.StatsMainFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     val titleMap = mapOf(
         HomeFragment::class to R.string.fragment_home_title,
         StatsMainFragment::class to R.string.fragment_stats_title,
+        ScheduleFragment::class to R.string.fragment_schedule_title,
         MediaFragment::class to R.string.fragment_media_title,
         MainStandingsFragment::class to R.string.fragment_standings_title
     )
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         setupHamburger()
 
         if (savedInstanceState == null) {
-            hamburger_menu.setCheckedItem(R.id.nav_schedule)
+            hamburger_menu.setCheckedItem(R.id.nav_home)
             changeFragment(HomeFragment())
         }
     }
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         hamburger_menu.setNavigationItemSelectedListener{
             when (it.itemId){
                 R.id.nav_home -> changeFragment(HomeFragment())
-                R.id.nav_schedule -> changeFragment(HomeFragment())
+                R.id.nav_schedule -> changeFragment(ScheduleFragment())
                 R.id.nav_player_stats -> changeFragment(StatsMainFragment())
                 R.id.nav_media -> changeFragment(MediaFragment())
                 R.id.nav_standings -> changeFragment(MainStandingsFragment())

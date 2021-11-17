@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Plays(
     val allPlays: List<Play>,
-    val currentPlay: Play,
+    val currentPlay: Play? = null,
     val penaltyPlays: List<Int>,
     val playsByPeriod: List<PlaysByPeriod>,
     val scoringPlays: List<Int>

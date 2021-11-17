@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class LinescoreTeam(
-    val goals: Int,
-    val rinkSide: String,
-    val shotsOnGoal: Int
+    val goals: Int = 0,
+    val rinkSide: String = "left",
+    val shotsOnGoal: Int = 0
 ) : Parcelable

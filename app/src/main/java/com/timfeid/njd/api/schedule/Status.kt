@@ -18,6 +18,7 @@ data class Status(
     companion object {
         val GAME_STATUS_FINAL = "7"
         val GAME_STATUS_SCHEDULED = "1"
+        val GAME_STATUS_POSTPONED = "9"
     }
 
     fun isFinal (): Boolean {
@@ -29,7 +30,15 @@ data class Status(
     }
 
     fun isScheduled(): Boolean {
-        if (statusCode == GAME_STATUS_SCHEDULED) {
+        if (statusCode == GAME_STATUS_SCHEDULED || isPostponed()) {
+            return true
+        }
+
+        return false
+    }
+
+    fun isPostponed(): Boolean {
+        if (statusCode == GAME_STATUS_POSTPONED) {
             return true
         }
 

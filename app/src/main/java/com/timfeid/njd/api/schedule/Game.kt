@@ -6,8 +6,11 @@ import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.api.common.Play
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
+import java.text.SimpleDateFormat
 
 import java.util.*
+import java.util.Date
+import java.util.TimeZone
 
 @Serializable
 @Parcelize
@@ -25,7 +28,7 @@ data class Game(
     val radioBroadcasts: List<RadioBroadcast> = ArrayList(),
     val broadcasts: List<Broadcast> = ArrayList(),
     val decisions: Decisions? = null,
-    val scoringPlays: List<Play>,
+    val scoringPlays: List<Play> = ArrayList(),
     var date: String = ""
 ) : Parcelable {
 
@@ -79,5 +82,11 @@ data class Game(
         }
 
         return total
+    }
+
+    fun getDate (): Date {
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        return dateFormat.parse(gameDate)
     }
 }
