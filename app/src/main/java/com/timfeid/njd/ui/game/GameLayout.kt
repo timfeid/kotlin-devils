@@ -95,10 +95,10 @@ internal abstract class GameLayout(
         val gameDate: TextView = rootView.findViewById(R.id.game_date)
         val gameTime: TextView = rootView.findViewById(R.id.game_time)
 
-        var date = game.getDate()
+        val date = game.getDate()
 
-        gameTime.setText(SimpleDateFormat("h:mm a", Locale.US).format(date))
-        gameDate.setText(SimpleDateFormat("MMM d", Locale.US).format(date))
+        gameTime.text = SimpleDateFormat("h:mm a", Locale.US).format(date)
+        gameDate.text = SimpleDateFormat("MMM d", Locale.US).format(date)
     }
 
     fun getWinsLossesOts (record: LeagueRecord): String {
@@ -116,9 +116,9 @@ internal abstract class GameLayout(
     }
 
     fun getPlayoffSeriesFormattedRecord(record: LeagueRecord): SpannableStringBuilder {
-        val record = "Series " + getWinsLossesOts(record)
+        val series = "Series " + getWinsLossesOts(record)
 
-        return SpannableStringBuilder(record)
+        return SpannableStringBuilder(series)
     }
 
     fun getFormattedRecord(record: LeagueRecord): SpannableStringBuilder {
@@ -126,7 +126,7 @@ internal abstract class GameLayout(
             return getPlayoffSeriesFormattedRecord(record)
         }
         val points = getTeamPoints(record).toString() + "pts"
-        var winsLossesOts = getWinsLossesOts(record)
+        val winsLossesOts = getWinsLossesOts(record)
         val recordWithPoints = "$winsLossesOts, $points"
         val str = SpannableStringBuilder(recordWithPoints)
         str.setSpan(

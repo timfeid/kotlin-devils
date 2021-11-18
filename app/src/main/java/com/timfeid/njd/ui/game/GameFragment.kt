@@ -32,9 +32,9 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var rootView = inflater.inflate(R.layout.fragment_game, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_game, container, false)
 
-        var layout = game?.let {
+        val layout = game?.let {
             Log.d("tag", it.status.toString())
             if (it.status.isScheduled()) {
                 UpcomingGameLayout(it, rootView, activity as Activity)
