@@ -43,10 +43,9 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         val startDate = Calendar.getInstance()
         val endDate = Calendar.getInstance()
         val url = UrlMaker("schedule")
-        var DAYS_FROM_TODAY = 10
 
-        endDate.add(Calendar.DATE, DAYS_FROM_TODAY)
-        startDate.add(Calendar.DATE, DAYS_FROM_TODAY * -1)
+        endDate.add(Calendar.DATE, 60)
+        startDate.add(Calendar.DATE, -10)
 
         // endDate.add(Calendar.MONTH, -10)
         // startDate.add(Calendar.MONTH, -10)

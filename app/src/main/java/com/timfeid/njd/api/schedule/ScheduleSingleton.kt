@@ -25,7 +25,7 @@ object ScheduleSingleton {
         val url = UrlMaker("schedule")
 
         endDate.add(Calendar.DATE, 200)
-        startDate.add(Calendar.DATE, -100)
+        startDate.add(Calendar.DATE, -200)
 
         url.addParam("startDate", format.format(startDate.getTime()))
         url.addParam("endDate", format.format(endDate.getTime()))

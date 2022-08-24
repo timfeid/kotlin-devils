@@ -11,5 +11,5 @@ data class Schedule(
     val totalGames: Int,
     val totalItems: Int,
     val totalMatches: Int,
-    val wait: Int
+    val wait: Int = 0
 )

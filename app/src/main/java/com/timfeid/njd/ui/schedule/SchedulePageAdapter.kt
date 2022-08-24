@@ -23,17 +23,22 @@ import java.lang.reflect.Modifier.isFinal
 import java.time.LocalDate
 import kotlin.collections.ArrayList
 
-val STARTING_MONTH = 10
-val TOTAL_MONTHS = 8
+const val STARTING_MONTH = 9
+const val TOTAL_MONTHS = 9
+val STARTING_YEAR = BuildConfig.API_SEASON.substring(0, 4).toInt()
 
 class SchedulePageAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
     val months: MutableList<LocalDate>
     init {
         val months: MutableList<LocalDate> = mutableListOf()
-        val currentYear = LocalDate.now().year
+
         for (m in STARTING_MONTH..(STARTING_MONTH + TOTAL_MONTHS)) {
-            val year = if (m > 12) { currentYear + 1 } else { currentYear }
+            var year = if (m > 12) { STARTING_YEAR+1 } else { STARTING_YEAR }
+
             val month = if (m > 12) { m - 12 } else { m }
+//            val year = if (month > 12) { currentYear+1 } else { currentYear-1 }
+
+
             months.add(LocalDate.of(year, month, 1))
         }
         this.months = months
