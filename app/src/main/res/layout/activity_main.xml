@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:tint="#85000000"
-        app:srcCompat="@mipmap/bg" />
+        app:srcCompat="@mipmap/bg3" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
