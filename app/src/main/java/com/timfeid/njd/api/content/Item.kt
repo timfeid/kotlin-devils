@@ -6,7 +6,7 @@ import android.util.ArrayMap
 import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Optional
+
 
 @Serializable
 @Parcelize

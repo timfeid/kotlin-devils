@@ -40,13 +40,13 @@ open class MediaAdapter(protected var fragmentManager: FragmentManager, val topi
         val url = UrlMaker(topicId.toString())
         url.baseUrl = "https://search-api.svc.nhl.com/svc/search/v2/nhl_global_en/topic/"
 
-        val json = Json(JsonConfiguration(strictMode = false))
+        val json = Json { ignoreUnknownKeys = true }
 
         Log.d("raw", url.get())
 
         val raw = URL(url.get()).readText()
 
-        val parsed = json.parse(News.serializer(), raw)
+        val parsed = json.decodeFromString(News.serializer(), raw)
 
         for (doc in parsed.docs) {
             mediaDataset.add(doc)

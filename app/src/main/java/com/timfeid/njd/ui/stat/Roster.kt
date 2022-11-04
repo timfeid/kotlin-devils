@@ -34,13 +34,13 @@ class Roster {
                 val url = UrlMaker("teams/${BuildConfig.API_TEAM_ID}")
                 url.addParam("hydrate", "franchise(roster(season=${BuildConfig.API_SEASON},person(name,draft(team),stats(splits=[yearByYear,yearByYearPlayoffs]))))")
 
-                val json = Json(JsonConfiguration(strictMode = false))
+                val json = Json { ignoreUnknownKeys = true }
 
                 Log.d("raw", url.get())
 
                 val raw = URL(url.get()).readText()
 
-                json.parse(Teams.serializer(), raw)
+                json.decodeFromString(Teams.serializer(), raw)
             }
         }
     }

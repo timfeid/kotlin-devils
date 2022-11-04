@@ -32,13 +32,13 @@ class Standings {
                 val url = UrlMaker("standings")
                 url.addParam("hydrate", "record(overall),division,conference,team(nextSchedule(team),previousSchedule(team))")
 
-                val json = Json(JsonConfiguration(strictMode = false))
+                val json = Json { ignoreUnknownKeys = true }
 
                 Log.d("raw", url.get())
 
                 val raw = URL(url.get()).readText()
 
-                json.parse(StandingsResponse.serializer(), raw)
+                json.decodeFromString(StandingsResponse.serializer(), raw)
             }
         }
     }

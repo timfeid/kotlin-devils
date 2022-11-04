@@ -39,12 +39,12 @@ class Leaders(private val homeId: Int, private val awayId: Int, private val call
     }
 
     private fun fetch (url: String): LastFive {
-        val json = Json(JsonConfiguration(strictMode = false))
+        val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
 
         val unparsed = URL(url).readText()
 
-        return json.parse(LastFive.serializer(), unparsed)
+        return json.decodeFromString(LastFive.serializer(), unparsed)
 
     }
 

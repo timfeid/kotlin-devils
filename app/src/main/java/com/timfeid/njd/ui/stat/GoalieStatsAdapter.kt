@@ -5,6 +5,8 @@ import com.timfeid.njd.api.schedule.Player
 import com.timfeid.njd.ui.standing.Roster
 
 
+fun Double.round(decimals: Int = 2): String = "%.0${decimals}f".format(this)
+
 open class GoalieStatsAdapter(override var fragmentManager: FragmentManager) :
     StatsAdapter(fragmentManager) {
 
@@ -32,9 +34,9 @@ open class GoalieStatsAdapter(override var fragmentManager: FragmentManager) :
 
     override fun stat(player: Player): String {
         return when(stat) {
-            0 -> player.findCurrentStats().savePercentage.toString()
+            0 -> player.findCurrentStats().savePercentage.round(3)
             1 -> player.findCurrentStats().gamesStarted.toString()
-            2 -> player.findCurrentStats().goalAgainstAverage.toString()
+            2 -> player.findCurrentStats().goalAgainstAverage.round(2)
             else -> ""
         }
     }

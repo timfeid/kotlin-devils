@@ -67,14 +67,14 @@ data class Doc(
     private fun fetchAsset(): Doc {
         val url = UrlMaker("web-v1.json")
         url.baseUrl = "https://cms.nhl.bamgrid.com/nhl/id/v1/$assetId/details/"
+        val json = Json { ignoreUnknownKeys = true }
 
-        val json = Json(JsonConfiguration(strictMode = false))
-
+//        val json = Json()
         Log.d("raw", url.get())
 
         val raw = URL(url.get()).readText()
 
-        val parsed = json.parse(serializer(), raw)
+        val parsed = json.decodeFromString(serializer(), raw)
 
         return parsed
     }

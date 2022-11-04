@@ -34,7 +34,7 @@ abstract class ListFragment() : Fragment() {
 
         val spinner: Spinner = view.findViewById(R.id.spinner)
         val arrayAdapter = FontSpinnerAdapter(
-            context!!,
+            requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             getSortOptions()
         )

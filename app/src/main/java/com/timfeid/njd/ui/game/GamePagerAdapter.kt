@@ -59,14 +59,14 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         ))
         url.addParam("teamId", BuildConfig.API_TEAM_ID)
 
-        val json = Json(JsonConfiguration(strictMode = false))
+        val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
 
         val unparsed = URL(url.get()).readText()
 
         Log.d("raw", url.get())
 
-        schedule = json.parse(Schedule.serializer(), unparsed)
+        schedule = json.decodeFromString(Schedule.serializer(), unparsed)
 
         if (schedule != null) {
             for (date in schedule!!.dates) {

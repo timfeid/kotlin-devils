@@ -224,28 +224,6 @@
             </LinearLayout>
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="15dp"
-            android:layout_marginBottom="1dp"
-            android:background="@color/transparentBlack">
-            <com.timfeid.njd.ui.BoldFontButton
-                android:layout_height="40dp"
-                android:id="@+id/videoInfo"
-                android:layout_width="wrap_content"
-                android:drawableStart="@drawable/ic_play_circle_outline_black_20dp"
-                android:drawableTint="@color/transparentIsh"
-                android:background="#00000000"
-                android:textColor="@color/transparentIsh"
-                android:drawablePadding="4dip"
-                android:fontFamily=""
-                android:text="Watch Live"
-                />
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/players_on_ice_box"
             android:layout_height="wrap_content"

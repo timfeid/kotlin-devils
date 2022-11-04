@@ -36,14 +36,14 @@ object ScheduleSingleton {
         ))
         url.addParam("teamId", BuildConfig.API_TEAM_ID)
 
-        val json = Json(JsonConfiguration(strictMode = false))
+        val json = Json { ignoreUnknownKeys = true }
 
 
         val unparsed = URL(url.get()).readText()
 
         Log.d("raw", url.get())
 
-        schedule = json.parse(Schedule.serializer(), unparsed)
+        schedule = json.decodeFromString(Schedule.serializer(), unparsed)
 
         return schedule
     }

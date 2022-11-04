@@ -66,39 +66,6 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
             fillBoxscore()
             fillScoringSummary()
             populateDateAndTime()
-            watchButton()
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun watchButton () {
-        if (content != null && content!!.media != null && content!!.media!!.epg.count() > 0) {
-            val nhlTv = content!!.media!!.epg.find { it.title == "NHLTV" }
-            if (nhlTv != null) {
-                var feed = nhlTv.items.find {
-                    it.mediaFeedType == if (game.isHome()) { "HOME" } else { "AWAY" }
-                }
-
-                if (feed == null) {
-                    feed = nhlTv.items.find {
-                        it.mediaFeedType == "NATIONAL"
-                    }
-                }
-
-                if (feed != null) {
-                    Log.d("t", feed.mediaPlaybackId)
-
-                    val watchGame = rootView.findViewById<BoldFontButton>(R.id.videoInfo)
-                    val teaser = if (feed.mediaState == "MEDIA_ARCHIVE") { "Watch archive" } else { "Watch Live" }
-                    watchGame.text = "${teaser} (${feed.callLetters})"
-                    watchGame.setOnClickListener { v ->
-                        val intent = Intent(v.context, GameVideoActivity::class.java)
-                        intent.putExtra("game", game)
-                        intent.putExtra("playbackId", feed.mediaPlaybackId)
-                        v.context.startActivity(intent)
-                    }
-                }
-            }
         }
     }
 
@@ -331,11 +298,11 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
             val url = UrlMaker("game/${game.gamePk}/feed/live")
 
-            val json = Json(JsonConfiguration(strictMode = false))
+            val json = Json { ignoreUnknownKeys = true }
             val unparsed = URL(url.get()).readText()
 
             CoroutineScope(Dispatchers.Main).launch {
-                liveGame = json.parse(Live.serializer(), unparsed)
+                liveGame = json.decodeFromString(Live.serializer(), unparsed)
                 fill()
 
                 if (liveGame != null && liveGame!!.gameData.status.isLive()) {
@@ -355,12 +322,12 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
     fun fetchContent() {
         CoroutineScope(Dispatchers.IO).launch {
             val url = UrlMaker("game/${game.gamePk}/content")
-            val json = Json(JsonConfiguration(strictMode = false))
+            val json = Json { ignoreUnknownKeys = true }
             val unparsed = URL(url.get()).readText()
 
 
             CoroutineScope(Dispatchers.Main).launch {
-                content = json.parse(Content.serializer(), unparsed)
+                content = json.decodeFromString(Content.serializer(), unparsed)
 
                 if (liveGame == null || liveGame!!.gameData.status.isLive()) {
                     Log.d("m3", "setting content timer")
