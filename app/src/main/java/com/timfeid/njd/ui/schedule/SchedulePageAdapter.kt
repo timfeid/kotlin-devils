@@ -33,11 +33,8 @@ class SchedulePageAdapter(fragmentManager: FragmentManager) : FragmentStatePager
         val months: MutableList<LocalDate> = mutableListOf()
 
         for (m in STARTING_MONTH..(STARTING_MONTH + TOTAL_MONTHS)) {
-            var year = if (m > 12) { STARTING_YEAR+1 } else { STARTING_YEAR }
-
+            val year = if (m > 12) { STARTING_YEAR+1 } else { STARTING_YEAR }
             val month = if (m > 12) { m - 12 } else { m }
-//            val year = if (month > 12) { currentYear+1 } else { currentYear-1 }
-
 
             months.add(LocalDate.of(year, month, 1))
         }
@@ -45,7 +42,6 @@ class SchedulePageAdapter(fragmentManager: FragmentManager) : FragmentStatePager
     }
 
     override fun getItem(position: Int): Fragment {
-        Log.d("SCHEDULE", "hi, looking for ${position} ${months[position].toString()}")
         return CalendarFragment.newInstance(months[position])
     }
 

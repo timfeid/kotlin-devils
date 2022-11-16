@@ -26,6 +26,7 @@ import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -116,29 +117,26 @@ class CalendarFragment : Fragment() {
     }
 
     private fun daysInMonthArray(date: LocalDate): ArrayList<DayAndGame>? {
+        val now = LocalDateTime.now()
         val daysInMonthArray: ArrayList<DayAndGame> = ArrayList()
         val yearMonth: YearMonth = YearMonth.from(date)
         val daysInMonth: Int = yearMonth.lengthOfMonth()
         val firstOfMonth = selectedDate.withDayOfMonth(1)
         val dayOfWeek = firstOfMonth.dayOfWeek.value
+
         for (i in 1..42) {
+            val isToday = date.month == now.month && (i - dayOfWeek) == now.dayOfMonth && date.year == now.year
+
             if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add(DayAndGame(""))
+                daysInMonthArray.add(DayAndGame("", isToday))
             } else {
-                daysInMonthArray.add(DayAndGame((i - dayOfWeek).toString(), findGameOn(i - dayOfWeek)))
+                daysInMonthArray.add(DayAndGame((i - dayOfWeek).toString(), isToday, findGameOn(i - dayOfWeek)))
             }
         }
         return daysInMonthArray
     }
 
     private fun findGameOn(day: Int): Game? {
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-        Log.d(TAG, "looking for games on the ${day} of ${selectedDate.format(formatter)}")
-
-//        for (game in games) {
-//            Log.d(TAG, game.gameDate)
-//        }
-
         if (games.containsKey(day.toString())) {
             return games[day.toString()]!![0]
         }

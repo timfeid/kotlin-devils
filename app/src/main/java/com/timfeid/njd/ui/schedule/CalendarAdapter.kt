@@ -1,9 +1,11 @@
 package com.timfeid.njd.ui.schedule
 
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.R
@@ -32,16 +34,18 @@ class CalendarAdapter(private val daysOfMonth: ArrayList<DayAndGame>) :
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.dayOfMonth.text = daysOfMonth[position].day
+        val day = daysOfMonth[position]
+        holder.dayOfMonth.text = day.day
 
+        val game = day.game
 
-        val game = daysOfMonth[position].game
+        if (day.isToday) {
+            holder.contentWrapper.setBackgroundResource(R.color.transparentBlack)
+            holder.dayOfMonth.setTypeface(null, Typeface.BOLD)
+            holder.dayOfMonth.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
+        }
+
         if (game != null) {
-            val resource = holder.itemView.context.resources.getIdentifier(
-                "team_" + if (game.isHome()) { game.teams.away.team.id.toString() } else { game.teams.home.team.id } + "_20172018_dark",
-                "drawable", holder.itemView.context.packageName
-            )
-//            holder.image.setImageResource(resource)
             var description = SimpleDateFormat("h:mm a", Locale.US).format(game.getDate())
 
             holder.abbreviation.text = if (game.isHome()) { game.teams.away.team.abbreviation } else { game.teams.home.team.abbreviation }
@@ -73,8 +77,6 @@ class CalendarAdapter(private val daysOfMonth: ArrayList<DayAndGame>) :
             }
         }
 
-        Log.d("ScheduleFragment", daysOfMonth[position].day)
-        Log.d("ScheduleFragment", daysOfMonth[position].game?.link ?: "NO GAME")
     }
 
     override fun getItemCount(): Int {

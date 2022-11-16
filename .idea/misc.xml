@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.15119408005381768" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.39479166666666665" />
         <entry key="app/src/main/res/layout/activity_setup.xml" value="0.43342391304347827" />
+        <entry key="app/src/main/res/layout/calendar_cell.xml" value="0.4421875" />
+        <entry key="app/src/main/res/layout/fragment_game_list.xml" value="0.4421875" />
+        <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.4421875" />
         <entry key="app/src/main/res/layout/game_previous.xml" value="0.5723958333333333" />
+        <entry key="app/src/main/res/layout/goalie_stats_row.xml" value="0.4421875" />
       </map>
     </option>
   </component>
@@ -14,7 +19,7 @@
       <item index="0" class="java.lang.String" itemvalue="android.webkit.JavascriptInterface" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

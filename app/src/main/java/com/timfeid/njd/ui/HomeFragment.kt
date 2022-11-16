@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.timfeid.njd.R
 import com.timfeid.njd.ui.game.GamePagerAdapter
 import kotlinx.android.synthetic.main.fragment_game_list.*
+import java.lang.NullPointerException
 
 class HomeFragment : Fragment() {
     private var rootView: View? = null
@@ -47,7 +48,12 @@ class HomeFragment : Fragment() {
         for ((position, game) in pagerAdapter.games.withIndex()) {
             Log.d("code", game.status.statusCode)
             if (!game.status.isFinal() && !game.status.isPostponed()) {
-                view_pager.currentItem = position
+                try {
+
+                    view_pager.currentItem = position
+                } catch (e: NullPointerException) {
+
+                }
 
                 return
             }
