@@ -1,6 +1,8 @@
 # Unofficial Devils Android App
-## Now available for testing on the play store
+## Now available on the play store
 https://play.google.com/store/apps/details?id=com.timfeid.njd
+
+## Releases are not up to date with the app store
 
 ## Screenshots
 ![hello](https://github.com/timfeid/kotlin-devils/blob/master/screenshots/Screenshot_20200118-161758.png?raw=true)
