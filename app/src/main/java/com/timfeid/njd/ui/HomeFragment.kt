@@ -46,8 +46,9 @@ class HomeFragment : Fragment() {
         }
 
         for ((position, game) in pagerAdapter.games.withIndex()) {
-            Log.d("code", game.status.statusCode)
-            if (!game.status.isFinal() && !game.status.isPostponed()) {
+            game.gameState?.let { Log.d("code", it) }
+
+            if (game.gameState == "FUT") {
                 try {
 
                     view_pager.currentItem = position

@@ -1,8 +1,6 @@
 package com.timfeid.njd.ui.standing
 
-import com.timfeid.njd.api.schedule.Conference
-import com.timfeid.njd.api.schedule.Division
-import com.timfeid.njd.api.standings.Record
+import com.timfeid.njd.api2.standings.Standing
 
 class WildcardFragment : StandingsFragment() {
     override fun fillStandings () {
@@ -15,33 +13,31 @@ class WildcardFragment : StandingsFragment() {
 
     }
 
-    private fun getConferenceDivisions(): MutableMap<Conference, MutableMap<Division, List<Record>>> {
+    private fun getConferenceDivisions(): MutableMap<String, MutableMap<String, MutableList<Standing>>> {
         val wildcard = Standings.getInstance().wildcardStandings()
-        val conferenceDivision: MutableMap<Conference, MutableMap<Division, List<Record>>> = mutableMapOf()
-        val wildcardDivision = Division(name = "Wildcard")
+        val conferenceDivision: MutableMap<String, MutableMap<String, MutableList<Standing>>> = mutableMapOf()
+        val wildcardDivision = "Wildcard"
 
-        for (division in wildcard.divisions) {
-            if (!conferenceDivision.contains(division.conference)) {
-                conferenceDivision[division.conference] = mutableMapOf()
+        for (team in wildcard.standings) {
+            if (!conferenceDivision.contains(team.conferenceName)) {
+                conferenceDivision[team.conferenceName] = mutableMapOf()
             }
 
-            conferenceDivision[division.conference]!![division.division] =
-                division.teamRecords.filter { it.wildCardRank == "0" }
-        }
-
-        for (division in wildcard.divisions) {
-            val players = division.teamRecords.filter {
-                it.wildCardRank != "0"
+            if (!conferenceDivision[team.conferenceName]!!.contains(team.divisionName)) {
+                conferenceDivision[team.conferenceName]!![team.divisionName] = mutableListOf()
             }
 
-            if (!conferenceDivision[division.conference]!!.contains(wildcardDivision)) {
-                conferenceDivision[division.conference]!![wildcardDivision] = players
+            if (team.wildcardSequence == 0) {
+                conferenceDivision[team.conferenceName]!![team.divisionName]!!.add(team)
             } else {
-                conferenceDivision[division.conference]!![wildcardDivision] = (conferenceDivision[division.conference]!![wildcardDivision]!! + players).sortedBy {
-                    it.wildCardRank.toInt()
+                if (!conferenceDivision[team.conferenceName]!!.contains(wildcardDivision)) {
+                    conferenceDivision[team.conferenceName]!![wildcardDivision] = mutableListOf()
                 }
+                conferenceDivision[team.conferenceName]!![wildcardDivision]!!.add(team)
             }
+
         }
+
 
         return conferenceDivision
     }

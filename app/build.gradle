@@ -17,9 +17,9 @@ android {
         versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'API_URL', '"https://statsapi.web.nhl.com/api/v1/"'
+        buildConfigField 'String', 'API_URL', '"https://api-web.nhle.com/v1/"'
         buildConfigField 'String', 'API_TEAM_ID', '"1"'
-        buildConfigField 'String', 'API_SEASON', '"20222023"'
+        buildConfigField 'String', 'API_SEASON', '"20232024"'
     }
     buildTypes {
         release {

@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.R
 import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.schedule.Game
 import com.timfeid.njd.api.schedule.Schedule
 import com.timfeid.njd.api.schedule.ScheduleSingleton
+import com.timfeid.njd.api2.Game
 import com.timfeid.njd.ui.game.GameFragment
 import com.timfeid.njd.ui.game.GamePagerAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -79,41 +79,62 @@ class CalendarFragment : Fragment() {
         return rootView
     }
 
+
+
     private fun setMonthView() {
         resetGames(selectedDate)
-        monthYearText?.text = monthYearFromDate(selectedDate)
-        val daysInMonth: ArrayList<DayAndGame> = daysInMonthArray(selectedDate)!!
+    }
 
-        val calendarAdapter = CalendarAdapter(daysInMonth)
-        val layoutManager: RecyclerView.LayoutManager =
-            GridLayoutManager(context, 7)
-        calendarRecyclerView!!.layoutManager = layoutManager
-        calendarRecyclerView!!.adapter = calendarAdapter
+    @JvmName("setGames1")
+    fun setGames(games: MutableMap<String, MutableList<Game>>) {
+        this.games = games
     }
 
     private fun resetGames(selectedDate: LocalDate) {
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/yy")
+        val urlFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
         val monthYear = selectedDate.format(formatter)
         Log.d(TAG, "Looking for games for ${monthYear}")
 
-        if (schedule != null) {
-            for (date in schedule!!.dates) {
-                for (game in date.games) {
+        val games: MutableMap<String, MutableList<Game>> = LinkedHashMap()
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val calendar = ScheduleSingleton.fetchForMonth(selectedDate.format(urlFormatter))
+            CoroutineScope(Dispatchers.Main).launch {
+                for (game in calendar.games) {
                     val d = game.getDate()
                     val month = SimpleDateFormat("MM/yy", Locale.US).format(d)
                     Log.d(TAG, "${month} === ${monthYear} ?? ${month == monthYear}")
                     val day = SimpleDateFormat("d", Locale.US).format(d)
                     if (month == monthYear) {
-                        Log.d(TAG, "${game.link} is in the month we're looking for!")
+                        Log.d(TAG, "${game.gameCenterLink} is in the month we're looking for!")
                         if (!games.containsKey(day)) {
-                            this.games[day] = mutableListOf()
+                            games[day] = mutableListOf()
                         }
-                        this.games[day]!!.add(game)
+                        games[day]!!.add(game)
                     }
-                    game.getDate()
+//                    game.getDate()
                 }
+                setGames(games)
+
+                monthYearText?.text = monthYearFromDate(selectedDate)
+                val daysInMonth: ArrayList<DayAndGame> = daysInMonthArray(selectedDate)!!
+
+                val calendarAdapter = CalendarAdapter(daysInMonth)
+                val layoutManager: RecyclerView.LayoutManager =
+                    GridLayoutManager(context, 7)
+                calendarRecyclerView!!.layoutManager = layoutManager
+                calendarRecyclerView!!.adapter = calendarAdapter
             }
+
         }
+        Log.d("HERE", games.toString())
+
+//        if (schedule != null) {
+
+
+
+//        }
     }
 
     private fun daysInMonthArray(date: LocalDate): ArrayList<DayAndGame>? {
@@ -155,7 +176,7 @@ class CalendarFragment : Fragment() {
     }
 
     fun fetchSchedule () {
-        schedule = ScheduleSingleton.fetchSchedule()
+//        schedule = ScheduleSingleton.fetchSchedule()
     }
 
     companion object {

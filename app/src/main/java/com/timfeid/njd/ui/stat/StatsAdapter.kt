@@ -15,13 +15,15 @@ import com.timfeid.njd.ui.standing.Roster
 import androidx.core.content.ContextCompat.startActivity
 import com.timfeid.njd.ui.player.PlayerActivity
 import android.content.Intent
+import com.timfeid.njd.api2.stats.Skater
+import com.timfeid.njd.api2.stats.Stats
 import java.io.Serializable
 
 
 abstract class StatsAdapter(protected open var fragmentManager: FragmentManager) :
     RecyclerView.Adapter<StatsAdapter.ViewHolder>() {
 
-    open var dataset: List<Player> = Roster.getInstance().players()
+    open var dataset: List<Skater> = Roster.getInstance().skaters()
     var stat = 0
 
     inner class ViewHolder(v: LinearLayout) : RecyclerView.ViewHolder(v) {
@@ -49,10 +51,10 @@ abstract class StatsAdapter(protected open var fragmentManager: FragmentManager)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = dataset[position]
-        holder.playerName.text = item.person.shortName()
+        holder.playerName.text = "${item.firstName} ${item.lastName}"
         holder.stat.text = stat(item)
-        holder.playerNumber.text = "#${item.jerseyNumber} | ${item.position.code}"
-        Picasso.get().load(item.person.getImageUrl()).into(holder.image)
+        holder.playerNumber.text = item.positionCode
+        Picasso.get().load(item.headshot).into(holder.image)
         holder.card.setOnClickListener {
             val intent = Intent(it.context, PlayerActivity::class.java)
             intent.putExtra("player", item)
@@ -65,6 +67,6 @@ abstract class StatsAdapter(protected open var fragmentManager: FragmentManager)
 
     }
 
-    abstract fun stat(player: Player): String
+    abstract fun stat(player: Skater): String
     abstract fun sortBy(pos: Int)
 }

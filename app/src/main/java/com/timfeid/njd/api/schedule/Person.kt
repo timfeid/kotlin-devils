@@ -45,11 +45,11 @@ data class Person(
     }
 
     fun getImageUrl (): String {
-        return "https://cms.nhl.bamgrid.com/images/headshots/current/60x60/$id.png"
+        return "https://assets.nhle.com/mugs/headshots/current/60x60/$id.png"
     }
 
     fun getActionImageUrl () : String {
-        return "https://cms.nhl.bamgrid.com/images/actionshots/$id.jpg"
+        return "https://assets.nhle.com/mugs/actionshots/1296x729/$id.jpg"
     }
 
     fun birthdate (): Date {

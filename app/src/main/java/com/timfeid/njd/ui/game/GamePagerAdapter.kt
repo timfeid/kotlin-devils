@@ -4,31 +4,28 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.schedule.Game
-import com.timfeid.njd.api.schedule.Schedule
+import com.timfeid.njd.api2.Team
+import com.timfeid.njd.api2.TeamResponse
+import com.timfeid.njd.api2.scoreboard.Game
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
+import com.timfeid.njd.api2.scoreboard.Scoreboard
 import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.*
-import org.json.JSONException
-import java.lang.reflect.Modifier.isFinal
-
 
 
 class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
-    var schedule: Schedule? = null
+    lateinit var schedule: Scoreboard
+    lateinit var teams: TeamResponse;
     var games = mutableListOf<Game>()
     var onCompleteCallback: (() -> Unit)? = null
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
             fetchSchedule()
+            fetchTeams()
             CoroutineScope(Dispatchers.Main).launch {
                 notifyDataSetChanged()
                 if (onCompleteCallback != null) {
@@ -38,26 +35,18 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
         }
     }
 
-    fun fetchSchedule (): Schedule? {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val startDate = Calendar.getInstance()
-        val endDate = Calendar.getInstance()
-        val url = UrlMaker("schedule")
+    fun fetchTeams() {
+        val url = UrlMaker("schedule-calendar/now")
+        val json = Json { ignoreUnknownKeys = true; isLenient = true}
+        val unparsed = URL(url.get()).readText()
+        Log.d("raw", url.get())
 
-        endDate.add(Calendar.DATE, 60)
-        startDate.add(Calendar.DATE, -10)
+        val response = json.decodeFromString(TeamResponse.serializer(), unparsed)
+        teams = response
+    }
 
-        // endDate.add(Calendar.MONTH, -10)
-        // startDate.add(Calendar.MONTH, -10)
-
-        url.addParam("startDate", format.format(startDate.getTime()))
-        url.addParam("endDate", format.format(endDate.getTime()))
-        url.addParam("hydrate", String.format("team(leaders,stats(splits=statsSingleSeason,season=%s),roster(season=%s,person(name,stats(splits=[statsSingleSeason,statsSingleSeasonPlayoffs,season=%s])))),linescore,broadcasts(all),tickets,game(content(media(epg),highlights(scoreboard)),seriesSummary),radioBroadcasts,metadata,decisions,boxscore,scoringplays,seriesSummary(series)",
-            BuildConfig.API_SEASON,
-            BuildConfig.API_SEASON,
-            BuildConfig.API_SEASON
-        ))
-        url.addParam("teamId", BuildConfig.API_TEAM_ID)
+    fun fetchSchedule () {
+        val url = UrlMaker("scoreboard/njd/now")
 
         val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
@@ -66,18 +55,15 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
         Log.d("raw", url.get())
 
-        schedule = json.decodeFromString(Schedule.serializer(), unparsed)
+        schedule = json.decodeFromString(Scoreboard.serializer(), unparsed)
 
-        if (schedule != null) {
-            for (date in schedule!!.dates) {
-                for (game in date.games) {
-                    game.date = date.date
-                    games.add(game)
-                }
+
+        for (date in schedule.gamesByDate) {
+            for (game in date.games) {
+                games.add(game)
             }
         }
 
-        return schedule
 
     }
 
@@ -86,11 +72,7 @@ class GamePagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
     }
 
     override fun getItem(position: Int): Fragment {
-        if (schedule == null) {
-            return GameFragment.newInstance()
-        }
-
-        return GameFragment.newInstance(games[position])
+        return GameFragment.newInstance(games[position], teams)
     }
 
     override fun getCount(): Int {

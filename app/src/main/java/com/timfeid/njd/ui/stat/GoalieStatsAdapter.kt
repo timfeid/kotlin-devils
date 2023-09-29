@@ -2,6 +2,7 @@ package com.timfeid.njd.ui.media
 
 import androidx.fragment.app.FragmentManager
 import com.timfeid.njd.api.schedule.Player
+import com.timfeid.njd.api2.stats.Skater
 import com.timfeid.njd.ui.standing.Roster
 
 
@@ -10,21 +11,21 @@ fun Double.round(decimals: Int = 2): String = "%.0${decimals}f".format(this)
 open class GoalieStatsAdapter(override var fragmentManager: FragmentManager) :
     StatsAdapter(fragmentManager) {
 
-    override var dataset: List<Player> = Roster.getInstance().players().filter {
-        it.position.code == "G"
+    override var dataset: List<Skater> = Roster.getInstance().skaters().filter {
+        it.positionCode == null
     }
 
     override fun sortBy(pos: Int) {
         stat = pos
         when(pos) {
             0 -> dataset = dataset.sortedByDescending {
-                it.findCurrentStats().savePercentage
+                it.savePercentage
             }
             1 -> dataset = dataset.sortedByDescending {
-                it.findCurrentStats().gamesStarted
+                it.gamesStarted
             }
             2 -> dataset = dataset.sortedByDescending {
-                it.findCurrentStats().goalAgainstAverage
+                it.goalsAgainstAverage
             }
         }
 
@@ -32,11 +33,11 @@ open class GoalieStatsAdapter(override var fragmentManager: FragmentManager) :
         notifyDataSetChanged()
     }
 
-    override fun stat(player: Player): String {
+    override fun stat(player: Skater): String {
         return when(stat) {
-            0 -> player.findCurrentStats().savePercentage.round(3)
-            1 -> player.findCurrentStats().gamesStarted.toString()
-            2 -> player.findCurrentStats().goalAgainstAverage.round(2)
+            0 -> player.savePercentage?.round(3) ?: ""
+            1 -> player.gamesStarted.toString()
+            2 -> player.goalsAgainstAverage?.round(2) ?: ""
             else -> ""
         }
     }

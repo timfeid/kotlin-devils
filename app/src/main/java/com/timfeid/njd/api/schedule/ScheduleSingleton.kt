@@ -8,33 +8,22 @@ import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
+import com.timfeid.njd.api2.Calendar;
 
 object ScheduleSingleton {
     init {
         Log.d("ScheduleSingleton", "Hi there!")
     }
-    var schedule: Schedule? = null
+    var calendarGamesMap: MutableMap<String, Calendar> = mutableMapOf()
 
-    fun fetchSchedule (): Schedule? {
-        if (schedule != null) {
-            return schedule
+    fun fetchForMonth (month: String): Calendar {
+        if (calendarGamesMap.containsKey(month)) {
+            return calendarGamesMap[month]!!
         }
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val startDate = Calendar.getInstance()
-        val endDate = Calendar.getInstance()
-        val url = UrlMaker("schedule")
 
-        endDate.add(Calendar.DATE, 200)
-        startDate.add(Calendar.DATE, -200)
 
-        url.addParam("startDate", format.format(startDate.getTime()))
-        url.addParam("endDate", format.format(endDate.getTime()))
-        url.addParam("hydrate", String.format("team,linescore",
-            BuildConfig.API_SEASON,
-            BuildConfig.API_SEASON,
-            BuildConfig.API_SEASON
-        ))
-        url.addParam("teamId", BuildConfig.API_TEAM_ID)
+        val url = UrlMaker("club-schedule/NJD/month/${month}")
 
         val json = Json { ignoreUnknownKeys = true }
 
@@ -43,8 +32,10 @@ object ScheduleSingleton {
 
         Log.d("raw", url.get())
 
-        schedule = json.decodeFromString(Schedule.serializer(), unparsed)
+        val calendar = json.decodeFromString(Calendar.serializer(), unparsed)
 
-        return schedule
+        calendarGamesMap.set(month, calendar)
+
+        return calendar
     }
 }

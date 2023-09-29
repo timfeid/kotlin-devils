@@ -1,49 +1,38 @@
 package com.timfeid.njd.ui.game
 
-import android.annotation.SuppressLint
-import com.timfeid.njd.api.schedule.Game
 import android.app.Activity
 import android.util.ArrayMap
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.timfeid.njd.R
-import com.timfeid.njd.api.schedule.Player
 import java.util.*
 import com.timfeid.njd.api.content.Item
 import android.content.Intent
-import com.timfeid.njd.ui.game.BoxscoreLayout
 import android.net.Uri
 import android.os.Handler
 import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.FileProvider
-import androidx.core.view.marginBottom
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.schedule.Content
-import com.timfeid.njd.api.live.Live
-import com.timfeid.njd.api.schedule.Status
-import com.timfeid.njd.api.schedule.Strength
-import com.timfeid.njd.ui.BoldFontButton
+import com.timfeid.njd.api2.TeamResponse
+import com.timfeid.njd.api2.gamecenter.Gamecenter
+import com.timfeid.njd.api2.gamecenter.TeamGameStat
+import com.timfeid.njd.api2.gamecenter.ThreeStar
+import com.timfeid.njd.api2.scoreboard.Game
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import java.io.File
 import java.net.URL
-import kotlin.concurrent.timer
 
 
-internal open class PreviousGameLayout(game: Game, rootView: View, activity: Activity) :
-    GameLayout(game, rootView, activity) {
+internal open class PreviousGameLayout(game: Game, teams: TeamResponse, rootView: View, activity: Activity) :
+    GameLayout(game, teams, rootView, activity) {
 
-
+    protected var initalized = false;
 
     init {
         fetchGame()
-        fetchContent()
-        fill()
+//        fetchContent()
     }
 
     protected var boxscores: ArrayMap<Int, BoxscoreLayout> = ArrayMap()
@@ -59,7 +48,9 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
     )
 
     override fun fill() {
-        if (liveGame != null) {
+        if (initalized) {
+
+
             linescore()
             populateThreeStars()
             scores()
@@ -90,28 +81,30 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         get() = R.layout.game_previous
 
     fun populateThreeStars () {
-        if (game.decisions != null && liveGame != null && game.decisions!!.firstStar != null) {
-            game.decisions!!.firstStar?.id?.let { populateStar("first", liveGame!!.findPlayerById(it)) }
-            game.decisions!!.secondStar?.id?.let { populateStar("second", liveGame!!.findPlayerById(it)) }
-            game.decisions!!.thirdStar?.id?.let { populateStar("third", liveGame!!.findPlayerById(it)) }
+        if (liveGame?.summary?.threeStars?.isEmpty() == false) {
+            populateStar("first", liveGame!!.summary!!.threeStars[0])
+            populateStar("second", liveGame!!.summary!!.threeStars[1])
+            populateStar("third", liveGame!!.summary!!.threeStars[2])
         } else {
             rootView.findViewById<LinearLayout>(R.id.three_stars_box).visibility = View.GONE
         }
     }
 
-    fun populateStar(ordinalPosition: String, star: Player?) {
+    fun populateStar(ordinalPosition: String, star: ThreeStar?) {
         if (star != null) {
             val image: ImageView = rootView.findViewById(getIdByName("${ordinalPosition}_star_image"))
             val name: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_name"))
             val stats: TextView = rootView.findViewById(getIdByName("${ordinalPosition}_star_stats"))
 
-            imageCircleUrl(image, star.person.getImageUrl())
-            name.text = star.person.shortName()
+            imageCircleUrl(image, star.headshot)
+            name.text = star.shortName()
 
-            if (star.position.code != "G") {
-                stats.text = "${star.stats.skaterStats.goals}G, ${star.stats.skaterStats.assists}A"
+            if (star.position != "G") {
+//                stats.text = "${star.stats.skaterStats.goals}G, ${star.stats.skaterStats.assists}A"
+                stats.text = "we need to figure this out"
             } else {
-                stats.text = "%.${3}f SV%%".format(star.stats.goalieStats.savePercentage / 100)
+//                stats.text = "%.${3}f SV%%".format(star.stats.goalieStats.savePercentage / 100)
+                stats.text = "we need to figure this out"
             }
 
         }
@@ -124,63 +117,77 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
         activity.startActivity(intent)
     }
 
-    private var liveGame: Live? = null
+    private lateinit var liveGame: Gamecenter
     private var content: Content? = null
 
+    fun findTeamStat(team: String, category: String, list: List<TeamGameStat>): String {
+        val value = list.find { it.category == category }
+        if (value != null) {
+            return if (team == "home") { value.homeValue } else { value.awayValue }
+        }
+
+        return ""
+    }
+
     fun fillBoxscore () {
-        val homeTeamStats = liveGame!!.liveData.boxscore.teams.home.teamStats.teamSkaterStats
-        val awayTeamStats = liveGame!!.liveData.boxscore.teams.away.teamStats.teamSkaterStats
+//        val homeTeamStats = liveGame!!.liveData.boxscore.teams.home.teamStats.teamSkaterStats
+//        val awayTeamStats = liveGame!!.liveData.boxscore.teams.away.teamStats.teamSkaterStats
+        val teamStats = liveGame.summary!!.teamGameStats
 
         for (entry in boxscores.entries) {
             val layout = entry.value
-            layout.teamIsHome(game.isHome())
+            layout.teamIsHome(game.homeTeam?.id == 1)
             when (entry.key) {
                 R.string.shots -> {
-                    layout.setHome(homeTeamStats.shots.toString())
-                    layout.setAway(awayTeamStats.shots.toString())
+                    layout.setHome(findTeamStat("home", "sog", teamStats))
+                    layout.setAway(findTeamStat("away", "sog", teamStats))
                 }
                 R.string.pim -> {
-                    layout.setHome(homeTeamStats.pim.toString())
-                    layout.setAway(awayTeamStats.pim.toString())
+                    layout.setHome(findTeamStat("home", "pim", teamStats))
+                    layout.setAway(findTeamStat("away", "pim", teamStats))
                 }
                 R.string.pp_ops -> {
-                    layout.setHome(homeTeamStats.powerPlayOpportunities.toString())
-                    layout.setAway(awayTeamStats.powerPlayOpportunities.toString())
+                    layout.setHome(findTeamStat("away", "pim", teamStats))
+                    layout.setAway(findTeamStat("home", "pim", teamStats))
                 }
                 R.string.hits -> {
-                    layout.setHome(homeTeamStats.hits.toString())
-                    layout.setAway(awayTeamStats.hits.toString())
+
+                    layout.setHome(findTeamStat("home", "hits", teamStats))
+                    layout.setAway(findTeamStat("away", "hits", teamStats))
                 }
                 R.string.blocks -> {
-                    layout.setHome(homeTeamStats.blocked.toString())
-                    layout.setAway(awayTeamStats.blocked.toString())
+
+                    layout.setHome(findTeamStat("home", "blockedShots", teamStats))
+                    layout.setAway(findTeamStat("away", "blockedShots", teamStats))
                 }
                 R.string.faceoff_p -> {
-                    layout.setHome(homeTeamStats.faceOffWinPercentage)
-                    layout.setAway(awayTeamStats.faceOffWinPercentage)
+                    layout.setHome(findTeamStat("home", "faceoffPctg", teamStats))
+                    layout.setAway(findTeamStat("away", "faceoffPctg", teamStats))
                 }
                 R.string.giveaways -> {
-                    layout.setHome(homeTeamStats.giveaways.toString())
-                    layout.setAway(awayTeamStats.giveaways.toString())
+                    layout.setHome(findTeamStat("home", "giveaways", teamStats))
+                    layout.setAway(findTeamStat("away", "giveaways", teamStats))
                 }
                 R.string.takeaways -> {
-                    layout.setHome(homeTeamStats.takeaways.toString())
-                    layout.setAway(awayTeamStats.takeaways.toString())
+                    layout.setHome(findTeamStat("home", "takeaways", teamStats))
+                    layout.setAway(findTeamStat("away", "takeaways", teamStats))
                 }
             }
         }
     }
 
     fun fillScoringSummary() {
-        if (liveGame != null) {
-
+//
             val scoringSummaryLayout: LinearLayout = rootView.findViewById(R.id.scoring_summary_layout)
-            val plays = liveGame!!.liveData.plays.getScoringPlays()
+            val periods = liveGame.summary!!.scoring
 
             scoringSummaryLayout.removeAllViews()
-            scoringSummaryLayout.visibility = if (plays.count() == 0) { View.GONE } else { View.VISIBLE }
+            scoringSummaryLayout.visibility = if (periods.isEmpty()) { View.GONE } else { View.VISIBLE }
 
-            for (play in plays) {
+            for (period in periods) {
+                for (play in period.goals) {
+
+
                 val layout = layoutInflater.inflate(
                     R.layout.scoring_summary_box,
                     scoringSummaryLayout,
@@ -195,34 +202,31 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
                 val time: TextView = layout.findViewById(R.id.scoring_summary_time)
                 val strength: TextView = layout.findViewById(R.id.scoring_summary_strength)
                 val viewVideo: ImageButton = layout.findViewById(R.id.view_video)
-                val person = play.getScorer()
-                val playStrength = play.result.strength
-                val scorerText =
-                    (person?.player?.fullName ?: "Unknown") + " (" + person?.seasonTotal + ")"
 
+                val playStrength = play.strength
+                val scorerText = "${play.firstName.substring(0, 1)}. ${play.lastName} (${play.goalsToDate})"
 
-                if (playStrength != null && playStrength.code != Strength.CODE_EVEN) {
-                    strength.text = playStrength.code
+                if (playStrength != "ev") {
+                    strength.text = playStrength.uppercase()
                 }
+//
+//                val highlight = content?.findHightlightFor(play.about.eventId)
+//
+//                if (highlight != null) {
+//                    viewVideo.setOnClickListener(View.OnClickListener {
+//                        playVideo(highlight)
+//                    })
+//                } else {
+//                    viewVideo.visibility = View.GONE
+//                }
+//
+//
 
-                val highlight = content?.findHightlightFor(play.about.eventId)
+                    imageCircleUrl(photo, play.headshot)
 
-                if (highlight != null) {
-                    viewVideo.setOnClickListener(View.OnClickListener {
-                        playVideo(highlight)
-                    })
-                } else {
-                    viewVideo.visibility = View.GONE
-                }
-
-
-                if (person != null) {
-                    imageCircleUrl(photo, person.player.getImageUrl())
-                }
-
-                var assisters = play.getAssists().joinToString {
-                    it.player.shortName()
-                }
+                    var assisters = play.assists.joinToString {
+                        it.firstName.substring(0, 1) + ". " + it.lastName
+                    }
 
                 if (assisters == "") {
                     assisters = "Unassisted"
@@ -230,86 +234,88 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
                 scorer.text = scorerText
                 assists.text = assisters
-                score.text = "${play.about.goals.home}-${play.about.goals.away}"
-                type.text = play.result.secondaryType
-                time.text = "${play.about.periodTime} ${play.about.ordinalNum}"
+                score.text = "${play.homeScore}-${play.awayScore}"
+                type.text = play.shotType
+                time.text = "${play.timeInPeriod} ${period.periodDescriptor.number}"
+                }
             }
-        }
+
     }
 
     private fun scores() {
-        val linescore = liveGame!!.liveData.linescore
+        val totals = liveGame.summary!!.linescore.totals
 
-        setTextViewTextByTag("HOME_TEAM_SCORE", linescore.teams.home.goals.toString())
-        setTextViewTextByTag("AWAY_TEAM_SCORE", linescore.teams.away.goals.toString())
+        setTextViewTextByTag("HOME_TEAM_SCORE", totals.home.toString())
+        setTextViewTextByTag("AWAY_TEAM_SCORE", totals.away.toString())
     }
 
     private fun linescore() {
-        val linescore = liveGame!!.liveData.linescore
-        for (period in linescore.periods) {
-            val headerText = rootView.findViewById<TextView>(getIdByName("period_${period.num}_name"))
-            val homeText = rootView.findViewById<TextView>(getIdByName("home_team_p${period.num}_score"))
-            val awayText = rootView.findViewById<TextView>(getIdByName("away_team_p${period.num}_score"))
+        val linescore = liveGame.summary!!.linescore
+        for (period in linescore.byPeriod) {
+            val headerText = rootView.findViewById<TextView>(getIdByName("period_${period.period}_name"))
+            val homeText = rootView.findViewById<TextView>(getIdByName("home_team_p${period.period}_score"))
+            val awayText = rootView.findViewById<TextView>(getIdByName("away_team_p${period.period}_score"))
 
             headerText.visibility = View.VISIBLE
             homeText.visibility = View.VISIBLE
             awayText.visibility = View.VISIBLE
 
-            homeText.text = period.home.goals.toString()
-            awayText.text = period.away.goals.toString()
+            homeText.text = period.home.toString()
+            awayText.text = period.away.toString()
         }
-
 
         val homeSog = rootView.findViewById<TextView>(R.id.home_team_sog)
         val awaySog = rootView.findViewById<TextView>(R.id.away_team_sog)
-        homeSog.text = linescore.teams.home.shotsOnGoal.toString()
-        awaySog.text = linescore.teams.away.shotsOnGoal.toString()
+        val sog = liveGame.summary!!.teamGameStats.find { it.category == "sog" }
 
+        homeSog.text = "${sog?.homeValue} SOG"
+        awaySog.text = "${sog?.awayValue} SOG"
     }
 
     override fun populateDateAndTime() {
-        if (liveGame == null) {
-            super.populateDateAndTime()
-        } else {
-            val gameDate: TextView = rootView.findViewById(R.id.game_date)
-            val gameTime: TextView = rootView.findViewById(R.id.game_time)
-            val liveData = liveGame!!.liveData
-            val gameData = liveGame!!.gameData
-
-            var timeRemaining = liveData.linescore.currentPeriodTimeRemaining
-
-            if (gameData.status.isFinal()) {
-                if (liveData.linescore.hasShootout) {
-                    timeRemaining += "/SO"
-                } else if (liveData.linescore.currentPeriodOrdinal == "OT") {
-                    timeRemaining += "/OT"
-                }
-            } else {
-                gameDate.text = liveData.linescore.currentPeriodOrdinal
-            }
-
-            gameTime.text = timeRemaining
-        }
+//        if (liveGame == null) {
+//            super.populateDateAndTime()
+//        } else {
+//            val gameDate: TextView = rootView.findViewById(R.id.game_date)
+//            val gameTime: TextView = rootView.findViewById(R.id.game_time)
+//            val liveData = liveGame!!.liveData
+//            val gameData = liveGame!!.gameData
+//
+//            var timeRemaining = liveData.linescore.currentPeriodTimeRemaining
+//
+//            if (gameData.status.isFinal()) {
+//                if (liveData.linescore.hasShootout) {
+//                    timeRemaining += "/SO"
+//                } else if (liveData.linescore.currentPeriodOrdinal == "OT") {
+//                    timeRemaining += "/OT"
+//                }
+//            } else {
+//                gameDate.text = liveData.linescore.currentPeriodOrdinal
+//            }
+//
+//            gameTime.text = timeRemaining
+//        }
     }
 
     fun fetchGame() {
         Log.d("m3", "getting live game")
         CoroutineScope(Dispatchers.IO).launch {
 
-            val url = UrlMaker("game/${game.gamePk}/feed/live")
+            val url = UrlMaker("gamecenter/${game.id}/landing")
 
             val json = Json { ignoreUnknownKeys = true }
             val unparsed = URL(url.get()).readText()
 
             CoroutineScope(Dispatchers.Main).launch {
-                liveGame = json.decodeFromString(Live.serializer(), unparsed)
+                liveGame = json.decodeFromString(Gamecenter.serializer(), unparsed)
+                initalized = true
                 fill()
 
-                if (liveGame != null && liveGame!!.gameData.status.isLive()) {
+                if (liveGame != null && liveGame!!.isLive()) {
                     Log.d("m3", "setting timer")
                     Handler().postDelayed({
                         fetchGame()
-                    }, (liveGame!!.metaData.wait * 1000).toLong())
+                    }, (30 * 1000).toLong())
                 } else {
                     Log.d("m3", "NO TIMER SET" + (liveGame != null).toString())
                 }
@@ -319,23 +325,23 @@ internal open class PreviousGameLayout(game: Game, rootView: View, activity: Act
 
     }
 
-    fun fetchContent() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val url = UrlMaker("game/${game.gamePk}/content")
-            val json = Json { ignoreUnknownKeys = true }
-            val unparsed = URL(url.get()).readText()
-
-
-            CoroutineScope(Dispatchers.Main).launch {
-                content = json.decodeFromString(Content.serializer(), unparsed)
-
-                if (liveGame == null || liveGame!!.gameData.status.isLive()) {
-                    Log.d("m3", "setting content timer")
-                    Handler().postDelayed({
-                        fetchContent()
-                    }, (30000).toLong())
-                }
-            }
-        }
-    }
+//    fun fetchContent() {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val url = UrlMaker("game/${game.gamePk}/content")
+//            val json = Json { ignoreUnknownKeys = true }
+//            val unparsed = URL(url.get()).readText()
+//
+//
+//            CoroutineScope(Dispatchers.Main).launch {
+//                content = json.decodeFromString(Content.serializer(), unparsed)
+//
+//                if (liveGame == null || liveGame!!.gameData.status.isLive()) {
+//                    Log.d("m3", "setting content timer")
+//                    Handler().postDelayed({
+//                        fetchContent()
+//                    }, (30000).toLong())
+//                }
+//            }
+//        }
+//    }
 }

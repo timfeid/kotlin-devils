@@ -2,6 +2,7 @@ package com.timfeid.njd.ui.standing
 
 import android.util.Log
 import com.timfeid.njd.UrlMaker
+import com.timfeid.njd.api2.standings.StandingsResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -9,7 +10,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.net.URL
-import com.timfeid.njd.api.standings.Standings as StandingsResponse
 
 class Standings {
 
@@ -29,8 +29,7 @@ class Standings {
     init {
         runBlocking {
             standings = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                val url = UrlMaker("standings")
-                url.addParam("hydrate", "record(overall),division,conference,team(nextSchedule(team),previousSchedule(team))")
+                val url = UrlMaker("standings/now")
 
                 val json = Json { ignoreUnknownKeys = true }
 

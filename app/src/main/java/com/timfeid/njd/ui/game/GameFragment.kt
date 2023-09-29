@@ -1,8 +1,6 @@
 package com.timfeid.njd.ui.game
 
 import android.app.Activity
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -11,21 +9,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.timfeid.njd.R
-import com.timfeid.njd.api.schedule.Game
-import com.timfeid.njd.api.schedule.Status
-import java.io.Serializable
+import com.timfeid.njd.api2.Team
+import com.timfeid.njd.api2.TeamResponse
+import com.timfeid.njd.api2.scoreboard.Game
 
 
 private const val ARG_GAME = "game"
+private const val ARG_TEAMS = "teams"
 
 class GameFragment : Fragment() {
-    protected var game: Game? = null
+    protected lateinit var game: Game
+    protected lateinit var teams: TeamResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            game = it.getParcelable(ARG_GAME)
-        }
+        game = arguments?.getParcelable(ARG_GAME)!!
+        teams = arguments?.getParcelable(ARG_TEAMS)!!
     }
 
     override fun onCreateView(
@@ -34,26 +33,27 @@ class GameFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_game, container, false)
 
-        val layout = game?.let {
-            Log.d("tag", it.status.toString())
-            if (it.status.isScheduled()) {
-                UpcomingGameLayout(it, rootView, activity as Activity)
+        val layout = game.let {
+            it.gameState?.let { it1 -> Log.d("tag", it1) }
+            if (it.gameState != "FINAL") {
+                UpcomingGameLayout(it, teams, rootView, activity as Activity)
             } else {
-                PreviousGameLayout(it, rootView, activity as Activity)
+                PreviousGameLayout(it, teams, rootView, activity as Activity)
             }
         }
 
-        layout?.build()
+        layout.build()
 
         return rootView
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(game: Game? = null) =
+        fun newInstance(game: Game, teams: TeamResponse) =
             GameFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_GAME, game as Parcelable)
+                    putParcelable(ARG_TEAMS, teams as Parcelable)
                 }
             }
     }

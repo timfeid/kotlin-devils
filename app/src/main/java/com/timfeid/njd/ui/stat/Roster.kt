@@ -4,7 +4,8 @@ import android.util.Log
 import com.timfeid.njd.BuildConfig
 import com.timfeid.njd.UrlMaker
 import com.timfeid.njd.api.schedule.Player
-import com.timfeid.njd.api.teams.Teams
+import com.timfeid.njd.api2.stats.Skater
+import com.timfeid.njd.api2.stats.Stats
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -26,13 +27,12 @@ class Roster {
         }
     }
 
-    var teams: Teams? = null
+    var teams: Stats
 
     init {
         runBlocking {
             teams = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                val url = UrlMaker("teams/${BuildConfig.API_TEAM_ID}")
-                url.addParam("hydrate", "franchise(roster(season=${BuildConfig.API_SEASON},person(name,draft(team),stats(splits=[yearByYear,yearByYearPlayoffs]))))")
+                val url = UrlMaker("club-stats/NJD/now")
 
                 val json = Json { ignoreUnknownKeys = true }
 
@@ -40,12 +40,12 @@ class Roster {
 
                 val raw = URL(url.get()).readText()
 
-                json.decodeFromString(Teams.serializer(), raw)
+                json.decodeFromString(Stats.serializer(), raw)
             }
         }
     }
 
-    fun players (): List<Player> {
-        return teams!!.teams[0].franchise.roster.roster
+    fun skaters (): List<Skater> {
+        return teams.skaters + teams.goalies
     }
 }

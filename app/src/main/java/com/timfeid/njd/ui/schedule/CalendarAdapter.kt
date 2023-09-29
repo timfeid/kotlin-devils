@@ -46,31 +46,26 @@ class CalendarAdapter(private val daysOfMonth: ArrayList<DayAndGame>) :
         }
 
         if (game != null) {
+            val isHome = game.homeTeam.id == 1
             var description = SimpleDateFormat("h:mm a", Locale.US).format(game.getDate())
 
-            holder.abbreviation.text = if (game.isHome()) { game.teams.away.team.abbreviation } else { game.teams.home.team.abbreviation }
+            holder.abbreviation.text = if (isHome) { game.awayTeam.abbrev } else { game.homeTeam.abbrev }
 
-            if (game.status.isFinal()) {
-                description = ""
-                if (game.linescore.hasShootout) {
+            if (game.gameOutcome != null) {
+                description = if (game.gameOutcome.lastPeriodType == "REG") { "" } else { game.gameOutcome.lastPeriodType }
 
-                    description += "SO"
-                } else if (game.linescore.periods.size > 3) {
-                    description += "OT"
-                }
-
-                if (game.linescore.teams.home.goals!! > game.linescore.teams.away.goals!!) {
-                    description += if (game.isHome()) { "W" } else { "L" }
+                if (game.homeTeam.score!! > game.awayTeam.score!!) {
+                    description += if (isHome) { "W" } else { "L" }
                 } else {
-                    description += if (game.isHome()) { "L" } else { "W" }
+                    description += if (isHome) { "L" } else { "W" }
                 }
 
-                description += " ${game.linescore.teams.home.goals}-${game.linescore.teams.away.goals}"
+                description += " ${game.homeTeam.score}-${game.awayTeam.score}"
             }
 
             holder.description.text = description
 
-            if (game.isHome()) {
+            if (isHome) {
                 holder.contentWrapper.setBackgroundResource(R.color.redIsh)
             } else {
                 holder.contentWrapper.setBackgroundResource(R.color.transparentBarely)

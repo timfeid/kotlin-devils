@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_setup.xml" value="0.43342391304347827" />
         <entry key="app/src/main/res/layout/calendar_cell.xml" value="0.4421875" />
         <entry key="app/src/main/res/layout/fragment_game_list.xml" value="0.4421875" />
+        <entry key="app/src/main/res/layout/fragment_main_standings.xml" value="0.5015625" />
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.4421875" />
         <entry key="app/src/main/res/layout/game_previous.xml" value="0.5723958333333333" />
         <entry key="app/src/main/res/layout/goalie_stats_row.xml" value="0.4421875" />

@@ -1,22 +1,49 @@
 package com.timfeid.njd.ui.game
 
 import android.annotation.SuppressLint
-import com.timfeid.njd.api.schedule.Game
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.app.Activity
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.timfeid.njd.R
+import com.timfeid.njd.UrlMaker
+import com.timfeid.njd.api2.TeamResponse
+
+import com.timfeid.njd.api2.gamecenter.Gamecenter
+import com.timfeid.njd.api2.scoreboard.Game
 import com.timfeid.njd.ui.FontTextView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.net.URL
 
 
-internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity) :
-    GameLayout(game, rootView, activity) {
+internal class UpcomingGameLayout(game: Game, teams: TeamResponse, rootView: View, activity: Activity) :
+    GameLayout(game, teams, rootView, activity) {
 
+    init {
+        fetchGame()
+    }
+    private lateinit var liveGame: Gamecenter
+    private var initalizied = false
+
+    fun fetchGame() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val url = UrlMaker("gamecenter/${game.id}/landing")
+            val json = Json { ignoreUnknownKeys = true }
+            val unparsed = URL(url.get()).readText()
+
+            CoroutineScope(Dispatchers.Main).launch {
+                liveGame = json.decodeFromString(Gamecenter.serializer(), unparsed)
+                initalizied = true
+                fill()
+            }
+        }
+    }
 
     override val layoutId: Int
         get() = R.layout.game_upcoming
@@ -26,24 +53,31 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
     var team = "home"
 
     override fun initView() {
-        team = if (game.isHome()) { "home" } else { "away" }
-        leaders = Leaders(game.teams.home.team.id, game.teams.away.team.id, fun () {
-            this.populateLeaders()
-        })
+        team = if (game.homeTeam.id == 1) { "home" } else { "away" }
+//        leaders = Leaders(game.teams.home.team.id, game.teams.away.team.id, fun () {
+//            this.populateLeaders()
+//        })
     }
 
     override fun fill() {
+
+        if (initalizied) {
         val broadcastInfo = rootView.findViewById<TextView>(R.id.broadcastInfo)
         broadcastInfo.text = getBroadcastInfo() + getRadioBroadcastInfo()
         populateTeamStats()
         populateGoalieStats()
+
+
+            populateLeaders()
+        }
     }
 
 
     fun getBroadcastInfo (): String {
-        for (broadcast in game.broadcasts) {
-            if (broadcast.type == team) {
-                return broadcast.name
+        var market = if (game.homeTeam.id == 1) { "H" } else { "A" }
+        for (broadcast in game.tvBroadcasts) {
+            if (broadcast.market == market) {
+                return broadcast.network.toString()
             }
         }
 
@@ -51,18 +85,17 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
     }
 
     fun getRadioBroadcastInfo (): String {
-        for (broadcast in game.radioBroadcasts) {
-            if (broadcast.type == team) {
-                return ", " + broadcast.name
-            }
-        }
+//        for (broadcast in game.radioBroadcasts) {
+//            if (broadcast.type == team) {
+//                return ", " + broadcast.name
+//            }
+//        }
 
         return ""
     }
 
     @SuppressLint("SetTextI18n")
     private fun populateLeaders() {
-        if (leaders != null) {
             val topScorersLayout = rootView.findViewById<LinearLayout>(
                 resources.getIdentifier(
                     "scoring_leaders",
@@ -70,94 +103,41 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 )
             )
 
-            val homeRoster = game.teams.home.team.roster!!.roster.sortedWith(compareByDescending(nullsFirst<Int>()) { it.findCurrentStats().points })
-            val awayRoster = game.teams.away.team.roster!!.roster.sortedWith(compareByDescending(nullsFirst<Int>()) { it.findCurrentStats().points })
+        for (i in liveGame.matchup!!.teamLeadersL5) {
+            val layout = layoutInflater.inflate(
+                R.layout.leaders_box,
+                topScorersLayout,
+                false
+            ) as LinearLayout
 
-            for (i in arrayOf("points", "goals", "assists", "+/-", "TOI")) {
-                val layout = layoutInflater.inflate(
-                    R.layout.leaders_box,
-                    topScorersLayout,
-                    false
-                ) as LinearLayout
+            val homePhoto = layout.findViewById<ImageView>(R.id.top_scorer_photo_home)
+            val homeScorer = layout.findViewById<TextView>(R.id.top_scorer_name_home)
+            val homeValue = layout.findViewById<TextView>(R.id.leader_home_value)
+            val homeInfo = layout.findViewById<TextView>(R.id.top_scorer_info_home)
 
-                val homePhoto = layout.findViewById<ImageView>(R.id.top_scorer_photo_home)
-                val homeScorer = layout.findViewById<TextView>(R.id.top_scorer_name_home)
-                val homeValue = layout.findViewById<TextView>(R.id.leader_home_value)
-                val homeInfo = layout.findViewById<TextView>(R.id.top_scorer_info_home)
+            val awayPhoto = layout.findViewById<ImageView>(R.id.top_scorer_photo_away)
+            val awayScorer = layout.findViewById<TextView>(R.id.top_scorer_name_away)
+            val awayValue = layout.findViewById<TextView>(R.id.leader_away_value)
+            val awayInfo = layout.findViewById<TextView>(R.id.top_scorer_info_away)
 
-                val awayPhoto = layout.findViewById<ImageView>(R.id.top_scorer_photo_away)
-                val awayScorer = layout.findViewById<TextView>(R.id.top_scorer_name_away)
-                val awayValue = layout.findViewById<TextView>(R.id.leader_away_value)
-                val awayInfo = layout.findViewById<TextView>(R.id.top_scorer_info_away)
+            val leaderType = layout.findViewById<TextView>(R.id.leader_type)
 
-                val leaderType = layout.findViewById<TextView>(R.id.leader_type)
+            homeScorer.text = i.homeLeader.name
+            homeValue.text = i.homeLeader.value.toString()
+            homeInfo.text = "${i.homeLeader.positionCode} #${i.homeLeader.sweaterNumber}"
+            imageCircleUrl(homePhoto, i.homeLeader.headshot)
 
-                val homeLeaderStats = leaders!!.homeTeamLeaders.stats
-                val homePlayer = when (i) {
-                    "points" -> homeLeaderStats.points.players[0]
-                    "goals" -> homeLeaderStats.goals.players[0]
-                    "assists" -> homeLeaderStats.assists.players[0]
-                    "+/-" -> homeLeaderStats.plusMinus.players[0]
-                    "TOI" -> homeLeaderStats.timeOnIce.players[0]
-                    else -> homeLeaderStats.assists.players[0]
-                }
+            awayScorer.text = i.awayLeader.name
+            awayValue.text = i.awayLeader.value.toString()
+            awayInfo.text = "${i.awayLeader.positionCode} #${i.awayLeader.sweaterNumber}"
+            imageCircleUrl(awayPhoto, i.awayLeader.headshot)
 
+            leaderType.text = i.category
 
-                val awayLeaderStats = leaders!!.awayTeamLeaders.stats
-                val awayPlayer = when (i) {
-                    "points" -> awayLeaderStats.points.players[0]
-                    "goals" -> awayLeaderStats.goals.players[0]
-                    "assists" -> awayLeaderStats.assists.players[0]
-                    "+/-" -> awayLeaderStats.plusMinus.players[0]
-                    "TOI" -> awayLeaderStats.timeOnIce.players[0]
-                    else -> awayLeaderStats.assists.players[0]
-                }
+            topScorersLayout.addView(layout)
 
-
-                val hv = when (i) {
-                    "points" -> homePlayer.stats.points
-                    "goals" -> homePlayer.stats.goals
-                    "assists" -> homePlayer.stats.assists
-                    "+/-" -> homePlayer.stats.plusMinus
-                    "TOI" -> homePlayer.stats.timeOnIceSeconds
-                    else -> 0
-                }
-
-                val av = when (i) {
-                    "points" -> awayPlayer.stats.points
-                    "goals" -> awayPlayer.stats.goals
-                    "assists" -> awayPlayer.stats.assists
-                    "+/-" -> awayPlayer.stats.plusMinus
-                    "TOI" -> awayPlayer.stats.timeOnIceSeconds
-                    else -> 0
-                }
-
-                val homeColonIndex = homePlayer.stats.timeOnIce.indexOf(':')
-                val awayColonIndex = homePlayer.stats.timeOnIce.indexOf(':')
-                homeScorer.text = homePlayer.shortName
-                homeValue.text = when (i) {
-                    "TOI" -> homePlayer.stats.timeOnIce.substring(0, if (homeColonIndex == -1) { homePlayer.stats.timeOnIce.length } else { homeColonIndex })
-                    else -> hv.toString()
-                }
-                homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv >= av) { R.color.white } else { R.color.transparentMax }))
-                homeInfo.text = "#${homePlayer.primaryNumber}, ${homePlayer.primaryPosition.abbreviation}"
-                imageCircleUrl(homePhoto, "https://cms.nhl.bamgrid.com/images/headshots/current/60x60/${homePlayer.id}@2x.png")
-
-                awayScorer.text = awayPlayer.shortName
-                awayValue.text = when (i) {
-                    "TOI" -> awayPlayer.stats.timeOnIce.substring(0, if (awayColonIndex == -1) { awayPlayer.stats.timeOnIce.length } else { awayColonIndex })
-                    else -> av.toString()
-                }
-                awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (av >= hv) { R.color.white } else { R.color.transparentMax }))
-                awayInfo.text = "#${awayPlayer.primaryNumber}, ${awayPlayer.primaryPosition.abbreviation}"
-
-                imageCircleUrl(awayPhoto, "https://cms.nhl.bamgrid.com/images/headshots/current/60x60/${awayPlayer.id}@2x.png")
-
-                leaderType.text = i
-
-                topScorersLayout.addView(layout)
-            }
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -169,11 +149,8 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
             )
         )
 
-        val homePlaceStats = game.teams.home.team.teamStats[0].splits[1].stat
-        val homeValueStats = game.teams.home.team.teamStats[0].splits[0].stat
-
-        val awayPlaceStats = game.teams.away.team.teamStats[0].splits[1].stat
-        val awayValueStats = game.teams.away.team.teamStats[0].splits[0].stat
+        val homeValueStats = liveGame.matchup!!.teamSeasonStats.homeTeam
+        val awayValueStats = liveGame.matchup!!.teamSeasonStats.awayTeam
 
         for (i in arrayOf("power play %", "penalty kill %", "faceoff %", "GF/GP", "GA/GP")) {
             val layout = layoutInflater.inflate(
@@ -194,65 +171,66 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
             val stat = layout.findViewById<TextView>(R.id.type)
 
-            val hv = when (i) {
-                "power play %" -> homeValueStats.powerPlayPercentage
-                "penalty kill %" -> homeValueStats.penaltyKillPercentage
-                "faceoff %" -> homeValueStats.faceOffWinPercentage
-                "GF/GP" -> String.format("%.2f", homeValueStats.goalsPerGame.toFloat())
-                "GA/GP" -> String.format("%.2f", homeValueStats.goalsAgainstPerGame.toFloat())
+            val hsv = when (i) {
+                "power play %" -> String.format("%.1f", homeValueStats.ppPctg *100)
+                "penalty kill %" -> String.format("%.1f", homeValueStats.pkPctg *100)
+                "faceoff %" -> String.format("%.1f", homeValueStats.faceoffWinningPctg*100)
+                "GF/GP" -> String.format("%.2f", homeValueStats.goalsForPerGamePlayed.toFloat())
+                "GA/GP" -> String.format("%.2f", homeValueStats.goalsAgainstPerGamePlayed.toFloat())
                 else -> ""
             }
             val hp = when (i) {
-                "power play %" -> homePlaceStats.powerPlayPercentage
-                "penalty kill %" -> homePlaceStats.penaltyKillPercentage
-                "faceoff %" -> homePlaceStats.faceOffWinPercentage
-                "GF/GP" -> homePlaceStats.goalsPerGame
-                "GA/GP" -> homePlaceStats.goalsAgainstPerGame
+                "power play %" -> homeValueStats.ppPctgRank
+                "penalty kill %" -> homeValueStats.pkPctgRank
+                "faceoff %" -> homeValueStats.faceoffWinningPctgRank
+                "GF/GP" -> homeValueStats.goalsForPerGamePlayedRank
+                "GA/GP" -> homeValueStats.goalsAgainstPerGamePlayedRank
                 else -> ""
             }
-
-            val av = when (i) {
-                "power play %" -> awayValueStats.powerPlayPercentage
-                "penalty kill %" -> awayValueStats.penaltyKillPercentage
-                "faceoff %" -> awayValueStats.faceOffWinPercentage
-                "GF/GP" -> String.format("%.2f", awayValueStats.goalsPerGame.toFloat())
-                "GA/GP" -> String.format("%.2f", awayValueStats.goalsAgainstPerGame.toFloat())
+            val asv = when (i) {
+                "power play %" -> String.format("%.1f", awayValueStats.ppPctg*100)
+                "penalty kill %" -> String.format("%.1f", awayValueStats.pkPctg*100)
+                "faceoff %" -> String.format("%.1f", awayValueStats.faceoffWinningPctg*100)
+                "GF/GP" -> String.format("%.2f", awayValueStats.goalsForPerGamePlayed.toFloat())
+                "GA/GP" -> String.format("%.2f", awayValueStats.goalsAgainstPerGamePlayed.toFloat())
                 else -> ""
             }
             val ap = when (i) {
-                "power play %" -> awayPlaceStats.powerPlayPercentage
-                "penalty kill %" -> awayPlaceStats.penaltyKillPercentage
-                "faceoff %" -> awayPlaceStats.faceOffWinPercentage
-                "GF/GP" -> awayPlaceStats.goalsPerGame
-                "GA/GP" -> awayPlaceStats.goalsAgainstPerGame
+                "power play %" -> awayValueStats.ppPctgRank
+                "penalty kill %" -> awayValueStats.pkPctgRank
+                "faceoff %" -> awayValueStats.faceoffWinningPctgRank
+                "GF/GP" -> awayValueStats.goalsForPerGamePlayedRank
+                "GA/GP" -> awayValueStats.goalsAgainstPerGamePlayedRank
                 else -> ""
             }
-
             stat.text = i
 
-            homeValue.text = hv
+            homeValue.text = hsv.toString()
             homePlace.text = "(${hp})"
 
-            awayValue.text = av
+            awayValue.text = asv.toString()
             awayPlace.text = "(${ap})"
 
-            bar.weightSum = hv.toFloat() + av.toFloat()
+            var hv = hsv.toString().toFloat()
+            var av = asv.toString().toFloat()
+            bar.weightSum = hv + av
 
-            if (i.indexOf("GP") == -1) {
-                homeBar.layoutParams = LinearLayout.LayoutParams(0, 2, hv.toFloat())
-                awayBar.layoutParams = LinearLayout.LayoutParams(0, 2, av.toFloat())
-                homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv.toFloat() >= av.toFloat()) { R.color.white } else { R.color.transparentIsh }))
-                awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (av.toFloat() >= hv.toFloat()) { R.color.white } else { R.color.transparentIsh}))
+            if (i == "GA/GP") {
+                homeBar.layoutParams = LinearLayout.LayoutParams(0, 2, hv)
+                awayBar.layoutParams = LinearLayout.LayoutParams(0, 2, av)
+                awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv >= av) { R.color.white } else { R.color.transparentIsh }))
+                homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (av >= hv) { R.color.white } else { R.color.transparentIsh}))
             } else {
-                homeBar.layoutParams = LinearLayout.LayoutParams(0, 2, av.toFloat())
-                awayBar.layoutParams = LinearLayout.LayoutParams(0, 2, hv.toFloat())
+                homeBar.layoutParams = LinearLayout.LayoutParams(0, 2, av)
+                awayBar.layoutParams = LinearLayout.LayoutParams(0, 2, hv)
 
-                homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv.toFloat() <= av.toFloat()) { R.color.white } else { R.color.transparentIsh }))
-                awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (av.toFloat() <= hv.toFloat()) { R.color.white } else { R.color.transparentIsh }))
+                awayValue.setTextColor(ContextCompat.getColor(rootView.context, if (hv <= av) { R.color.white } else { R.color.transparentIsh }))
+                homeValue.setTextColor(ContextCompat.getColor(rootView.context, if (av <= hv) { R.color.white } else { R.color.transparentIsh }))
             }
+            var isHome = game.homeTeam.id == 1
 
-            homeBar.setBackgroundColor(if (game.isHome()) { ContextCompat.getColor(rootView.context, R.color.colorPrimary) } else { ContextCompat.getColor(rootView.context, R.color.transparentIsh) })
-            awayBar.setBackgroundColor(if (!game.isHome()) { ContextCompat.getColor(rootView.context, R.color.colorPrimary) } else { ContextCompat.getColor(rootView.context, R.color.transparentIsh) })
+            homeBar.setBackgroundColor(if (isHome) { ContextCompat.getColor(rootView.context, R.color.colorPrimary) } else { ContextCompat.getColor(rootView.context, R.color.transparentIsh) })
+            awayBar.setBackgroundColor(if (!isHome) { ContextCompat.getColor(rootView.context, R.color.colorPrimary) } else { ContextCompat.getColor(rootView.context, R.color.transparentIsh) })
 
             teamStatsLayout.addView(layout)
         }
@@ -260,7 +238,7 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
 
     fun createStat (title: String): BoxscoreLayout {
         val s = BoxscoreLayout(activity, title)
-        s.teamIsHome(game.isHome())
+        s.teamIsHome(game.homeTeam!!.id == 1)
 
         return s
     }
@@ -269,19 +247,18 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
         val goalieStats = rootView.findViewById(R.id.goalie_stats) as LinearLayout
 
 
-        val homeGoalies = game.teams.home.team.roster!!.roster.filter { it.position.code == "G" }.sortedByDescending {
-            it.findCurrentStats().gamesStarted
-        }
-        val awayGoalies = game.teams.away.team.roster!!.roster.filter { it.position.code == "G" }.sortedByDescending {
-            it.findCurrentStats().gamesStarted
-        }
+
+        val homeGoalies = liveGame.matchup!!.goalieComparison.homeTeam
+        val awayGoalies = liveGame.matchup!!.goalieComparison.awayTeam
+
 
         Log.d("away goalies", awayGoalies.toString())
 
+
         for ((index, goalie) in homeGoalies.withIndex()) {
             if (awayGoalies.getOrNull(index) != null) {
-                val homeStats = goalie.findCurrentStats()
-                val awayStats = awayGoalies[index].findCurrentStats()
+                val homeStats = goalie
+                val awayStats = awayGoalies[index]
 
                 val layout = layoutInflater.inflate(
                     R.layout.goalie_stats_row,
@@ -310,27 +287,33 @@ internal class UpcomingGameLayout(game: Game, rootView: View, activity: Activity
                 val awaySo = layout.findViewById<FontTextView>(R.id.away_stat_so)
                 val homeSo = layout.findViewById<FontTextView>(R.id.home_stat_so)
 
-                imageCircleUrl(awayImage, awayGoalies[index].person.getImageUrl())
-                imageCircleUrl(homeImage, goalie.person.getImageUrl())
+                imageCircleUrl(awayImage, awayStats.headshot)
+                imageCircleUrl(homeImage, homeStats.headshot)
 
-                awayName.text = awayGoalies[index].person.shortName()
-                homeName.text = goalie.person.shortName()
+                awayName.text = awayStats.name
+                homeName.text = homeStats.name
 
-                awayNumber.text = "#${awayGoalies[index].person.primaryNumber}"
-                homeNumber.text = "#${goalie.person.primaryNumber}"
+                if (awayStats.sweaterNumber != null) {
+                    awayNumber.text = "#${awayStats.sweaterNumber}"
+                }
 
-                awayRecord.text = "${awayStats.wins}-${awayStats.losses}-${awayStats.ot}"
-                homeRecord.text = "${homeStats.wins}-${homeStats.losses}-${homeStats.ot}"
+                if (homeStats.sweaterNumber != null) {
+                    homeNumber.text = "#${homeStats.sweaterNumber}"
+                }
+
+                awayRecord.text = awayStats.record
+                homeRecord.text = homeStats.record
 
 
-                awayGaa.text = String.format("%.2f", awayStats.goalAgainstAverage)
-                homeGaa.text = String.format("%.2f", homeStats.goalAgainstAverage)
 
-                awaySvp.text = String.format("%.3f", awayStats.savePercentage)
-                homeSvp.text = String.format("%.3f", homeStats.savePercentage)
+                awayGaa.text = if (awayStats.gaa !== null) { String.format("%.2f", awayStats.gaa) }else { "n/a" }
+                homeGaa.text = if (homeStats.gaa !== null) { String.format("%.2f", homeStats.gaa) }else { "n/a" }
 
-                awaySo.text = awayStats.shutouts.toString()
-                homeSo.text = homeStats.shutouts.toString()
+                awaySvp.text = if (awayStats.savePctg != null) { String.format("%.3f", awayStats.savePctg) } else { "n/a" }
+                homeSvp.text = if (homeStats.savePctg != null) { String.format("%.3f", homeStats.savePctg) } else { "n/a" }
+
+                awaySo.text = if (awayStats.shutouts != null) { awayStats.shutouts.toString() } else { "n/a" }
+                homeSo.text = if (homeStats.shutouts != null) { homeStats.shutouts.toString() } else { "n/a" }
 
                 goalieStats.addView(layout)
 

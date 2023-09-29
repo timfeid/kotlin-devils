@@ -1,35 +1,33 @@
 package com.timfeid.njd.ui.game
 
 import android.app.Activity
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
-import org.json.JSONException
 import android.content.res.Resources
-import android.view.View
-import android.widget.ImageView
-import com.squareup.picasso.Picasso
-import com.timfeid.njd.api.schedule.Game
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ScrollView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 import com.timfeid.njd.R
-import com.timfeid.njd.UrlMaker
-import com.timfeid.njd.api.live.Live
 import com.timfeid.njd.api.schedule.LeagueRecord
-import com.timfeid.njd.api.schedule.Schedule
+import com.timfeid.njd.api2.Team
+import com.timfeid.njd.api2.TeamResponse
+import com.timfeid.njd.api2.scoreboard.Game
 import com.timfeid.njd.utils.image.CircleTransform
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import java.lang.StringBuilder
-import java.net.URL
+import org.json.JSONException
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 internal abstract class GameLayout(
     protected var game: Game,
+    protected var teams: TeamResponse,
     protected var rootView: View,
     activity: Activity
 ) {
@@ -94,8 +92,10 @@ internal abstract class GameLayout(
 
         val gameDate: TextView = rootView.findViewById(R.id.game_date)
         val gameTime: TextView = rootView.findViewById(R.id.game_time)
+        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
+        val accessor: TemporalAccessor = timeFormatter.parse(game.startTimeUTC)
 
-        val date = game.getDate()
+        val date = Date.from(Instant.from(accessor))
 
         gameTime.text = SimpleDateFormat("h:mm a", Locale.US).format(date)
         gameDate.text = SimpleDateFormat("MMM d", Locale.US).format(date)
@@ -122,7 +122,7 @@ internal abstract class GameLayout(
     }
 
     fun getFormattedRecord(record: LeagueRecord): SpannableStringBuilder {
-        if (game.gameType === GAME_TYPE_PLAYOFF) {
+        if (game.gameType == 7) {
             return getPlayoffSeriesFormattedRecord(record)
         }
         val points = getTeamPoints(record).toString() + "pts"
@@ -146,19 +146,30 @@ internal abstract class GameLayout(
         resources.getIdentifier(id, defType, activity.packageName)
 
     private fun populateAwayTeam() {
-        game.teams.away.team.teamName?.let { setTextViewTextByTag("AWAY_TEAM_NAME", it) }
-        setImageViewByTag("AWAY_TEAM_LOGO", getLogoResourceFor(game.teams.away.team.id))
-        awayTeamCity!!.setText(game.teams.away.team.locationName)
-        game.teams.away.leagueRecord?.let {
-            awayTeamRecord!!.setText(getFormattedRecord(it))
+        val awayTeam: Team = teams.findTeamById(game.awayTeam.id)
+
+        setTextViewTextByTag("AWAY_TEAM_NAME", awayTeam.commonName)
+
+        setImageViewByTag("AWAY_TEAM_LOGO", getLogoResourceFor(game.awayTeam.id))
+
+
+        awayTeamCity!!.text = awayTeam.placeName
+        game.awayTeam.record.let {
+            awayTeamRecord!!.text = it
         }
     }
 
     private fun populateHomeTeam() {
-        game.teams.home.team.teamName?.let { setTextViewTextByTag("HOME_TEAM_NAME", it) }
-        setImageViewByTag("HOME_TEAM_LOGO", getLogoResourceFor(game.teams.home.team.id))
-        homeTeamCity!!.setText(game.teams.home.team.locationName)
-        homeTeamRecord!!.setText(game.teams.home.leagueRecord?.let { getFormattedRecord(it) })
+        val homeTeam: Team = teams.findTeamById(game.homeTeam.id)
+        setTextViewTextByTag("HOME_TEAM_NAME", homeTeam.commonName)
+
+        setImageViewByTag("HOME_TEAM_LOGO", getLogoResourceFor(game.homeTeam.id))
+
+
+        homeTeamCity!!.text = homeTeam.placeName
+        game.homeTeam.record.let {
+            homeTeamRecord!!.text = it
+        }
     }
 
     private fun initMainView() {
@@ -171,7 +182,7 @@ internal abstract class GameLayout(
     internal abstract fun initView()
     internal abstract fun fill()
 
-    protected fun setTextViewTextByTag(tag: String, text: String) {
+    fun setTextViewTextByTag(tag: String, text: String) {
         for (view in getViewsByTag(rootView as ViewGroup, tag)) {
             val v = view as TextView
             v.text = text
